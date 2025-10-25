@@ -1,0 +1,12 @@
+.margen-superior-main {
+  margin-top: 40px;
+  padding: 20px;
+}
+
+.texto-marca {
+    color: rgb(226, 43, 43) !important;
+}
+
+.color-encabezado {
+  background-color: brown !important;
+}
