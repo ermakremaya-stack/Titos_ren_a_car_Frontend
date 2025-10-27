@@ -5,7 +5,8 @@ import Encabezado from "./components/navegation/Encabezado.jsx"
 
 import Inicio from "./views/Inicio.jsx";
 import Coches from "./views/Coches.jsx";
-
+import Coches from "./views/Empleados.jsx";
+import Coches from "./views/Capacitacion.jsx";
 
 import "./App.css";
 
@@ -17,6 +18,8 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Inicio/>} />
             <Route path="/coches" element={<Coches/>} />
+             <Route path="/empleados" element={<Empleados/>} />
+             <Route path="/capacitacion" element={<Capacitacion/>} />
             <Route path="*" element={<h2> 404 - Pagina no encontrada</h2>} />
           </Routes>
         </main>
