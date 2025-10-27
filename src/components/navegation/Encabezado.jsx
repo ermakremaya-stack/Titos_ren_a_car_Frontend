@@ -50,14 +50,14 @@ const Encabezado = () => {
                 className={mostrarMenu ? "texto-marca" : "text-white"}
                 onClick={() => manejarNavegacion("/inicio")}
                 >
-                  {mostrarMenu ? <i className='bi-house-fill me-2'></i> : null}Inicio
+                  {mostrarMenu ? <i className="bi bi-house-fill"></i> : null} Inicio
                 </Nav.Link>
 
               <Nav.Link
                 className={mostrarMenu ? "texto-marca" : "text-white"}
                 onClick={() => manejarNavegacion("/coches")}
                 >
-                  {mostrarMenu ? <i className='bi bi-box-seam'></i> : null}Coches
+                  {mostrarMenu ? <i className='bi bi-car-front'></i> : null} Coches
                 </Nav.Link>
             </Nav>
           </Offcanvas.Body>
