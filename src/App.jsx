@@ -5,8 +5,8 @@ import Encabezado from "./components/navegation/Encabezado.jsx"
 
 import Inicio from "./views/Inicio.jsx";
 import Coches from "./views/Coches.jsx";
-import Coches from "./views/Empleados.jsx";
-import Coches from "./views/Capacitacion.jsx";
+import Empleados from "./views/Empleados.jsx";
+import Capacitacion from "./views/Capacitacion.jsx";
 
 import "./App.css";
 
