@@ -18,10 +18,10 @@ const App = () => {
         <main className='margen-superior-main'>
           <Routes>
             <Route path="/" element={<Inicio/>} />
-            <Route path="/coches" element={<Coches/>} />
-             <Route path="/empleados" element={<Empleados/>} />
-             <Route path="/capacitacion" element={<Capacitacion/>} />
-              <Route path="/usuarios" element={<Usuarios/>} />
+            <Route path="/coches" element={<Coches />} />
+            <Route path="/empleados" element={<Empleados />} />
+            <Route path="/capacitacion" element={<Capacitacion />} />
+            <Route path="/usuarios" element={<Usuarios />} />
             <Route path="*" element={<h2> 404 - Pagina no encontrada</h2>} />
           </Routes>
         </main>
