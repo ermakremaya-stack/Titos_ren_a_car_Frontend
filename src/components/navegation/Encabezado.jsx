@@ -78,7 +78,7 @@ const Encabezado = () => {
                 className={mostrarMenu ? "texto-marca" : "text-white"}
                 onClick={() => manejarNavegacion("/capacitacion")}
               >
-                {mostrarMenu ? <i className="bi-house-fill me-2"></i> : null} Capacitación
+                {mostrarMenu ? <i className="bi bi-building-fill-gear"></i> : null} Capacitación
               </Nav.Link>
             </Nav>
           </Offcanvas.Body>
