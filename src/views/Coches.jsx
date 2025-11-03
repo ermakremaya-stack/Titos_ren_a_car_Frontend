@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import TablaCoches from "../components/coches/TablaCoches.jsx";
 import CuadroBusqueda from "../components/busquedas/CuadroBusqueda.jsx";
+import ModalRegistroCoche from "../components/coches/ModalRegistroCoches.jsx";
 
 const Coches = () => {
 
@@ -11,11 +12,47 @@ const Coches = () => {
   const [cochesFiltrados, setCochesFiltrados] = useState([]);
   const [textoBusqueda, setTextoBusqueda] = useState('');
 
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [nuevoCoche, setNuevoCoche] = useState({
+    Marca: '',
+    Modelo: '',
+    Color: '',
+    Placa: '',
+  });
+
+  
+  const manejarCambioInput = (e) => {
+    const { name, value } = e.target;
+    setNuevoCoche(prev => ({ ...prev, [name]: value }));
+  };
+  
+  const agregarCoche = async () => {
+    if (!nuevoCoche.Placa.trim()) return;
+
+    try {
+      const respuesta = await fetch('http://localhost:3000/api/registrarcoche', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(nuevoCoche)
+      });
+
+      if (!respuesta.ok) throw new Error('Error al guardar');
+
+      // Limpiar y cerrar
+      setNuevoCoche({ Marca: '', Modelo: '', Anio: 0, Placa: '', Color: '', Fecha_Registro: Date() });
+      setMostrarModal(false);
+      await obtenerCoches(); // Refresca la lista
+    } catch (error) {
+      console.error("Error al agregar el producto:", error);
+      alert("No se pudo guardar el producto. Revisa la consola.");
+    }
+  };
+
   const obtenerCoches = async () => {
     try{
       const respuesta = await fetch("http://localhost:3000/api/Coches");
       if(!respuesta.ok) {
-        throw new Error("Error al obtemer los clientes");
+        throw new Error("Error al obtener los coches");
       }
 
       const datos = await respuesta.json();
@@ -59,10 +96,27 @@ const Coches = () => {
             manejarCambioBusqueda={manejarCambioBusqueda}
             />
           </Col>
+          <Col className="text-end">
+            <Button
+              className="color-boton"
+              onClick={() => setMostrarModal(true)}
+            >
+              + Nuevo Coche
+            </Button>
+            </Col>
         </Row>
+
         <TablaCoches
         coches={cochesFiltrados}
         cargando={cargando}
+        />
+
+        <ModalRegistroCoche
+        mostrarModal={mostrarModal}
+        setMostrarModal={setMostrarModal}
+        nuevoCoche={nuevoCoche}
+        manejarCambioInput={manejarCambioInput}
+        agregarCoche={agregarCoche}
         />
       </Container>
     </>
