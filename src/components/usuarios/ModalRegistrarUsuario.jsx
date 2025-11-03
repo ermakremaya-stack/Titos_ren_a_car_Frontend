@@ -1,6 +1,6 @@
 import { Modal, Form, Button } from "react-bootstrap";
 
-const ModalRegistroUsuario = ({
+const ModalRegistrarUsuario = ({
   mostrarModal,
   setMostrarModal,
   nuevoUsuario,
@@ -187,4 +187,4 @@ const ModalRegistroUsuario = ({
   );
 };
 
-export default ModalRegistroUsuario;
+export default ModalRegistrarUsuario;

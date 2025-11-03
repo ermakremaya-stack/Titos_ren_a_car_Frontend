@@ -24,6 +24,7 @@ const TablaUsuarios = ({ usuarios, cargando }) => {
                       <th>Nombre2</th>
                       <th>Apellido1</th>
                       <th>Apellido2</th>
+                      <th>Telefono</th>
                       <th>Direccion</th>
                       <th>Email</th>
                       <th>Licencia</th>
@@ -42,6 +43,7 @@ const TablaUsuarios = ({ usuarios, cargando }) => {
                 <td>{usuario.Nombre2}</td>
                 <td>{usuario.Apellido1}</td>
                 <td>{usuario.Apellido2}</td>
+                <td>{usuario.Telefono}</td>
                 <td>{usuario.Direccion}</td>
                 <td>{usuario.Email}</td>
                 <td>{usuario.Licencia}</td>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Container, Button, Row, Col } from "react-bootstrap";
 import TablaUsuarios from "../components/usuarios/TablaUsuarios.jsx";
-import ModalRegistroUsuario from "../components/usuarios/ModalRegistrarUsuario.jsx";
+import ModalRegistrarUsuario from "../components/usuarios/ModalRegistrarUsuario.jsx";
 import CuadroBusqueda from "../components/busquedas/CuadroBusqueda.jsx";
 
 
@@ -15,7 +15,7 @@ const [usuarios, setUsuarios] = useState([]);
 
   const [mostrarModal, setMostrarModal] = useState(false);
   const [nuevoUsuario, setNuevoUsuario] = useState({
-    ROL: "Usuario",
+    Rol: "Usuario",
     Cedula: "",
     Nombre1: "",
     Nombre2: "",
@@ -28,64 +28,14 @@ const [usuarios, setUsuarios] = useState([]);
     Contrasena: "",
   });
 
-  useEffect(() => {
-    obtenerUsuario();
-  }, []);
-
-  const obtenerUsuario = async () => {
-    try {
-      const respuesta = await fetch("http://localhost:3000/api/usuarios");
-      if (!respuesta.ok) {
-        throw  Error("Error al obtener los Usuarios");
-      }
-
-      const datos = await respuesta.json();
-      console.log("Usuarios API raw:", datos);
-
-      // Aceptar varias formas de respuesta: array directo o objeto con la lista en alguna clave
-      let lista = [];
-      if (Array.isArray(datos)) lista = datos;
-      else if (Array.isArray(datos.usuarios)) lista = datos.usuarios;
-      else if (Array.isArray(datos.data)) lista = datos.data;
-      else if (Array.isArray(datos.results)) lista = datos.results;
-      else {
-        // último recurso: si el objeto tiene sólo claves que parecen usuarios, intentar extraer valores
-        const posibles = Object.values(datos).filter((v) => Array.isArray(v));
-        lista = posibles[0] || [];
-      }
-
-      setUsuarios(lista);
-      setUsuariosFiltrados(lista);
-      setCargando(false);
-    } catch (error) {
-      console.error("Error al obtener usuarios:", error);
-      setCargando(false);
-    }
-
-  };
-
-        const manejarCambioBusqueda = (e) => {
-    const texto = e.target.value.toLowerCase();
-        setTextoBusqueda(texto);
-    const filtrados = usuarios.filter((usuario) =>
-      (usuario.Nombre1 || "").toLowerCase().includes(texto) ||
-      (usuario.Nombre2 || "").toLowerCase().includes(texto) ||
-      (usuario.Apellido1 || "").toLowerCase().includes(texto) ||
-      (usuario.Apellido2 || "").toLowerCase().includes(texto) ||
-      (usuario.Telefono || "").toLowerCase().includes(texto) ||
-      (usuario.Direccion || "").toLowerCase().includes(texto) ||
-      (usuario.Licencia || "").toLowerCase().includes(texto) ||
-      (usuario.Email || "").toLowerCase().includes(texto)
-    );
-        setUsuariosFiltrados(filtrados);
-    };
-
      const manejarCambioInput = (e) => {
     const { name, value } = e.target;
     setNuevoUsuario((prev) => ({ ...prev, [name]: value }));
   };
 
-  const agregarUsuario = async () => {
+
+
+ const agregarUsuario = async () => {
     if (!nuevoUsuario.Nombre1 ||
       !nuevoUsuario.Apellido1 ||
       !nuevoUsuario.Telefono ||
@@ -103,9 +53,8 @@ const [usuarios, setUsuarios] = useState([]);
       });
 
       if (!respuesta.ok) throw new Error("Error al registrar el usuario");
-
       setNuevoUsuario({
-        ROL: "Usuario",
+        Rol: "Usuario",
         Cedula: "",
         Nombre1: "",
         Nombre2: "",
@@ -119,28 +68,59 @@ const [usuarios, setUsuarios] = useState([]);
       });
       setMostrarModal(false);
       // refrescar lista tras crear usuario
-      await obtenerUsuarios();
+      await obtenerUsuario();
     } catch (error) {
       console.error("Error al agregar usuario:", error);
       alert("No se pudo registrar el usuario.");
     }
   };
 
+  const obtenerUsuario = async () => {
+    try {
+      const respuesta = await fetch("http://localhost:3000/api/usuarios");
+      if (!respuesta.ok) {
+        throw  Error("Error al obtener los Usuarios");
+      }
+
+      const datos = await respuesta.json();
+
+      setUsuarios(datos);
+      setUsuariosFiltrados(datos);
+      setCargando(false);
+    } catch (error) {
+      console.error(error.menssage);
+      setCargando(false);
+    }
+
+  };
+
+        const manejarCambioBusqueda = (e) => {
+    const texto = e.target.value.toLowerCase();
+        setTextoBusqueda(texto);
+
+    const filtrados = usuarios.filter((usuario) =>
+      usuario.Rol .toLowerCase().includes(texto) ||
+      usuario.Cedula.toLowerCase().includes(texto) ||
+      usuario.Nombre1.toLowerCase().includes(texto) ||
+      usuario.Nombre2.toLowerCase().includes(texto) ||
+      usuario.Apellido1.toLowerCase().includes(texto) ||
+      usuario.Apellido2.toLowerCase().includes(texto) ||
+      usuario.Telefono.toLowerCase().includes(texto) ||
+      usuario.Direccion.toLowerCase().includes(texto) ||
+      usuario.Licencia.toLowerCase().includes(texto) ||
+      usuario.Email.toLowerCase().includes(texto)
+    );
+        setUsuariosFiltrados(filtrados);
+    };
+
+  useEffect(() => {
+    obtenerUsuario();
+  }, []);
+
   return (
     <>
     <Container className="mt-4">
       <h4>Usuarios</h4>
-      {/* Debug: mostrar número de usuarios y un preview del primero para facilitar diagnóstico */}
-      {!cargando && (
-        <div className="mt-2 mb-2">
-          <strong>Debug:</strong> {usuariosFiltrados.length} usuarios cargados
-          {usuariosFiltrados.length > 0 && (
-            <pre style={{ maxHeight: 200, overflow: "auto", background: "#f8f9fa", padding: 8 }}>
-              {JSON.stringify(usuariosFiltrados[0], null, 2)}
-            </pre>
-          )}
-        </div>
-      )}
       <Row>
         <Col lg={5} md={8} sm={8} xs={7}>
           <CuadroBusqueda
@@ -148,20 +128,21 @@ const [usuarios, setUsuarios] = useState([]);
             manejarCambioBusqueda={manejarCambioBusqueda}
           />
         </Col>
-      </Row>
+     
 
       <Col className="text-end">
       <Button variant="primary" onClick={() => setMostrarModal(true)}>
         + Nuevo Usuario
       </Button>
         </Col>
+      </Row>
 
         <TablaUsuarios
          usuarios={usuariosFiltrados}
          cargando={cargando}
           />
 
-        <ModalRegistroUsuario
+        <ModalRegistrarUsuario
           mostrarModal={mostrarModal}
           setMostrarModal={setMostrarModal}
           nuevoUsuario={nuevoUsuario}
