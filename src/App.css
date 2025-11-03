@@ -9,4 +9,10 @@
 
 .color-encabezado {
   background-color: brown !important;
+  border-color: rgb(0, 0, 0) !important;
+}
+
+.color-boton{
+  background-color: rgb(142, 42, 42) !important;
+  border-color: rgb(0, 0, 0) !important;
 }
