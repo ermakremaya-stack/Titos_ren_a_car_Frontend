@@ -2,7 +2,7 @@ const BotonOrden = ({ campo, children, orden, manejarOrden }) => {
   const activo = orden.campo === campo;
 
   return (
-    <th
+    <span
       style={{ cursor: "pointer", userSelect: "none" }}
       onClick={() => manejarOrden(campo)}
       className="text-nowrap"
@@ -23,7 +23,7 @@ const BotonOrden = ({ campo, children, orden, manejarOrden }) => {
           }}
         />
       </div>
-    </th>
+    </span>
   );
 };
 
