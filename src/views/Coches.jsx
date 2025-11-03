@@ -14,10 +14,12 @@ const Coches = () => {
 
   const [mostrarModal, setMostrarModal] = useState(false);
   const [nuevoCoche, setNuevoCoche] = useState({
-    Marca: '',
-    Modelo: '',
-    Color: '',
-    Placa: '',
+    marca: '',
+    modelo: '',
+    anio: 0,
+    placa: '',
+    color: '',
+    fecha_registro: '',
   });
 
   
@@ -27,7 +29,7 @@ const Coches = () => {
   };
   
   const agregarCoche = async () => {
-    if (!nuevoCoche.Placa.trim()) return;
+    if (!nuevoCoche.placa.trim()) return;
 
     try {
       const respuesta = await fetch('http://localhost:3000/api/registrarcoche', {
@@ -39,12 +41,12 @@ const Coches = () => {
       if (!respuesta.ok) throw new Error('Error al guardar');
 
       // Limpiar y cerrar
-      setNuevoCoche({ Marca: '', Modelo: '', Anio: 0, Placa: '', Color: '', Fecha_Registro: Date() });
+      setNuevoCoche({ marca: '', modelo: '', anio: 0, placa: '', color: '', fecha_registro: '' });
       setMostrarModal(false);
       await obtenerCoches(); // Refresca la lista
     } catch (error) {
-      console.error("Error al agregar el producto:", error);
-      alert("No se pudo guardar el producto. Revisa la consola.");
+      console.error("Error al agregar el coche:", error);
+      alert("No se pudo guardar el coche. Revisa la consola.");
     }
   };
 
@@ -72,11 +74,11 @@ const Coches = () => {
 
     const filtrados = coches.filter(
       (coche) => 
-        coche.Marca.toLowerCase().includes(texto) ||
-        coche.Modelo.toLowerCase().includes(texto) ||
-        coche.Placa.toLowerCase().includes(texto) ||
-        coche.Color.toLowerCase().includes(texto) ||
-        coche.Estado.toLowerCase().includes(texto) 
+        coche.marca.toLowerCase().includes(texto) ||
+        coche.modelo.toLowerCase().includes(texto) ||
+        coche.placa.toLowerCase().includes(texto) ||
+        coche.color.toLowerCase().includes(texto) ||
+        coche.estado.toLowerCase().includes(texto) 
     );
     setCochesFiltrados(filtrados)
   };

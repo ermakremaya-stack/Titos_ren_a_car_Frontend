@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import { Table, Spinner } from "react-bootstrap";
 import BotonOrden from "../ordenamiento/BotonOrden";
-import  PropTypes  from "prop-types";
-
-
 
 const TablaCoche = ({ coches, cargando }) => {
 

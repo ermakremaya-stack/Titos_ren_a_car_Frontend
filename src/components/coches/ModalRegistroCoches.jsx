@@ -18,11 +18,11 @@ const ModalRegistroCoche = ({
       <Modal.Body>
         <Form>
           <Form.Group className="mb-3" controlId="marca">
-            <Form.Label>Nombre del Coche</Form.Label>
+            <Form.Label>Marca del Coche</Form.Label>
             <Form.Control
               type="text"
-              name="Marca"
-              value={nuevoCoche.Marca}
+              name="marca"
+              value={nuevoCoche.marca}
               onChange={manejarCambioInput}
               placeholder="Ej: Toyota"
               maxLength={20}
@@ -34,8 +34,8 @@ const ModalRegistroCoche = ({
             <Form.Label>Modelo del coche</Form.Label>
             <Form.Control
               type="text"
-              name="Modelo"
-              value={nuevoCoche.Modelo}
+              name="modelo"
+              value={nuevoCoche.modelo}
               onChange={manejarCambioInput}
               placeholder="Modelo del coche"
               maxLength={20}
@@ -48,7 +48,7 @@ const ModalRegistroCoche = ({
             <Form.Control
               type="number"
               name="anio"
-              value={nuevoCoche.Anio}
+              value={nuevoCoche.anio}
               onChange={manejarCambioInput}
               placeholder="Ej: 2025"
               step='1'
@@ -61,8 +61,8 @@ const ModalRegistroCoche = ({
             <Form.Label>Placa del coche</Form.Label>
             <Form.Control
               type="text"
-              name="Placa"
-              value={nuevoCoche.Placa}
+              name="placa"
+              value={nuevoCoche.placa}
               onChange={manejarCambioInput}
               placeholder="Ej: 1225-5642"
               required
@@ -73,8 +73,8 @@ const ModalRegistroCoche = ({
             <Form.Label>Color del coche</Form.Label>
             <Form.Control
               type="text"
-              name="Color"
-              value={nuevoCoche.Color}
+              name="color"
+              value={nuevoCoche.color}
               onChange={manejarCambioInput}
               placeholder="Ej: Rojo"
               maxLength={20}
@@ -82,14 +82,14 @@ const ModalRegistroCoche = ({
             />
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="fecharegistro">
+          <Form.Group className="mb-3" controlId="fechaRegistro">
             <Form.Label>Fecha registro del coche</Form.Label>
             <Form.Control
-              type="date"
-              name="Fecha_Registro"
-              value={nuevoCoche.Fecha_Registro}
+              type="text"
+              name="fecha_registro"
+              value={nuevoCoche.fecha_registro}
               onChange={manejarCambioInput}
-              placeholder="Ej: 10/09/2025"
+              placeholder="Ej: yyyy-mm-dd"
               required
             />
           </Form.Group>
@@ -103,7 +103,7 @@ const ModalRegistroCoche = ({
         <Button
           variant="primary"
           onClick={agregarCoche}
-          disabled={!nuevoCoche.Placa.trim()}
+          disabled={!nuevoCoche.placa.trim()}
         >
           Guardar Coche
         </Button>
