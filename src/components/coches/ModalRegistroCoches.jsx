@@ -16,6 +16,7 @@ const ModalRegistroCoche = ({
         <Modal.Title>Agregar Nuevo Coche</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        
         <Form>
           <Form.Group className="mb-3" controlId="marca">
             <Form.Label>Marca del Coche</Form.Label>
@@ -78,18 +79,6 @@ const ModalRegistroCoche = ({
               onChange={manejarCambioInput}
               placeholder="Ej: Rojo"
               maxLength={20}
-              required
-            />
-          </Form.Group>
-
-          <Form.Group className="mb-3" controlId="fechaRegistro">
-            <Form.Label>Fecha registro del coche</Form.Label>
-            <Form.Control
-              type="text"
-              name="fecha_registro"
-              value={nuevoCoche.fecha_registro}
-              onChange={manejarCambioInput}
-              placeholder="Ej: yyyy-mm-dd"
               required
             />
           </Form.Group>

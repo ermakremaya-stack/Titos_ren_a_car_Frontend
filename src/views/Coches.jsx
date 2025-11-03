@@ -19,7 +19,6 @@ const Coches = () => {
     anio: 0,
     placa: '',
     color: '',
-    fecha_registro: '',
   });
 
   
@@ -41,7 +40,7 @@ const Coches = () => {
       if (!respuesta.ok) throw new Error('Error al guardar');
 
       // Limpiar y cerrar
-      setNuevoCoche({ marca: '', modelo: '', anio: 0, placa: '', color: '', fecha_registro: '' });
+      setNuevoCoche({ marca: '', modelo: '', anio: 0, placa: '', color: '' });
       setMostrarModal(false);
       await obtenerCoches(); // Refresca la lista
     } catch (error) {

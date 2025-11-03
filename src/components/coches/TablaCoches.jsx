@@ -60,7 +60,7 @@ const TablaCoche = ({ coches, cargando }) => {
               </BotonOrden>
             </th>
             <th>Modelo</th>
-            <th>Anio</th>
+            <th>Año del modelo</th>
             <th>Placa</th>
             <th>Color</th>
             <th>
