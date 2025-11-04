@@ -3,6 +3,9 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import TablaCoches from "../components/coches/TablaCoches.jsx";
 import CuadroBusqueda from "../components/busquedas/CuadroBusqueda.jsx";
 import ModalRegistroCoche from "../components/coches/ModalRegistroCoches.jsx";
+import ModalEdicionCategoria from '../components/coches/ModalEditarCoche.jsx';
+import ModalEliminacionCategoria from '../components/coches/ModalEliminarCoche.jsx';
+
 
 const Coches = () => {
 
@@ -21,12 +24,63 @@ const Coches = () => {
     color: '',
   });
 
-  
+  const [mostrarModalEdicion, setMostrarModalEdicion] = useState(false);
+  const [mostrarModalEliminar, setMostrarModalEliminar] = useState(false);
+
+  const [cocheEditado, setCocheEditado] = useState(null);
+  const [cocheAEliminar, setCocheAEliminar] = useState(null);
+
+
+  const abrirModalEdicion = (coche) => {
+    setCocheEditado({ ...coche });
+    setMostrarModalEdicion(true);
+  };
+
+  const guardarEdicion = async () => {
+    if (!cocheEditado.placa.trim()) return;
+    try {
+      const respuesta = await fetch(`http://localhost:3000/api/actualizarcoche/${cocheEditado.id_coche}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(cocheEditado)
+      });
+      if (!respuesta.ok) throw new Error('Error al actualizar');
+      setMostrarModalEdicion(false);
+      await obtenerCoches();
+    } catch (error) {
+      console.error("Error al editar coche:", error);
+      alert("No se pudo actualizar la coche.");
+    }
+  };
+
+
+  const abrirModalEliminacion = (coche) => {
+    setCocheAEliminar(coche);
+    setMostrarModalEliminar(true);
+  };
+
+  const confirmarEliminacion = async () => {
+    try {
+      const respuesta = await fetch(`http://localhost:3000/api/eliminarcoche/${cocheAEliminar.id_coche}`, {
+        method: 'DELETE',
+      });
+      if (!respuesta.ok) throw new Error('Error al eliminar');
+      setMostrarModalEliminar(false);
+      setCocheAEliminar(null);
+      await obtenerCoches();
+    } catch (error) {
+      console.error("Error al eliminar coche:", error);
+      alert("No se pudo eliminar la coche.");
+    }
+  };
+
+
+
   const manejarCambioInput = (e) => {
     const { name, value } = e.target;
     setNuevoCoche(prev => ({ ...prev, [name]: value }));
   };
-  
+
   const agregarCoche = async () => {
     if (!nuevoCoche.placa.trim()) return;
 
@@ -50,9 +104,9 @@ const Coches = () => {
   };
 
   const obtenerCoches = async () => {
-    try{
+    try {
       const respuesta = await fetch("http://localhost:3000/api/Coches");
-      if(!respuesta.ok) {
+      if (!respuesta.ok) {
         throw new Error("Error al obtener los coches");
       }
 
@@ -61,7 +115,7 @@ const Coches = () => {
       setCoches(datos);
       setCochesFiltrados(datos);
       setCargando(false);
-    }catch (error) {
+    } catch (error) {
       console.error(error.message);
       setCargando(false);
     }
@@ -72,12 +126,12 @@ const Coches = () => {
     setTextoBusqueda(texto);
 
     const filtrados = coches.filter(
-      (coche) => 
+      (coche) =>
         coche.marca.toLowerCase().includes(texto) ||
         coche.modelo.toLowerCase().includes(texto) ||
         coche.placa.toLowerCase().includes(texto) ||
         coche.color.toLowerCase().includes(texto) ||
-        coche.estado.toLowerCase().includes(texto) 
+        coche.estado.toLowerCase().includes(texto)
     );
     setCochesFiltrados(filtrados)
   };
@@ -93,8 +147,8 @@ const Coches = () => {
         <Row>
           <Col lg={5} md={8} sm={8} xs={7}>
             <CuadroBusqueda
-            textoBusqueda={textoBusqueda}
-            manejarCambioBusqueda={manejarCambioBusqueda}
+              textoBusqueda={textoBusqueda}
+              manejarCambioBusqueda={manejarCambioBusqueda}
             />
           </Col>
           <Col className="text-end">
@@ -104,24 +158,44 @@ const Coches = () => {
             >
               + Nuevo Coche
             </Button>
-            </Col>
+          </Col>
         </Row>
 
         <TablaCoches
-        coches={cochesFiltrados}
-        cargando={cargando}
+          coches={cochesFiltrados}
+          cargando={cargando}
+          abrirModalEdicion={abrirModalEdicion}
+          abrirModalEliminacion={abrirModalEliminacion}
+
         />
 
         <ModalRegistroCoche
-        mostrarModal={mostrarModal}
-        setMostrarModal={setMostrarModal}
-        nuevoCoche={nuevoCoche}
-        manejarCambioInput={manejarCambioInput}
-        agregarCoche={agregarCoche}
+          mostrarModal={mostrarModal}
+          setMostrarModal={setMostrarModal}
+          nuevoCoche={nuevoCoche}
+          manejarCambioInput={manejarCambioInput}
+          agregarCoche={agregarCoche}
         />
+
+        <ModalEdicionCategoria
+          mostrar={mostrarModalEdicion}
+          setMostrar={setMostrarModalEdicion}
+          categoriaEditada={cocheEditado}
+          setCategoriaEditada={setCocheEditado}
+          guardarEdicion={guardarEdicion}
+        />
+
+        <ModalEliminacionCategoria
+          mostrar={mostrarModalEliminar}
+          setMostrar={setMostrarModalEliminar}
+          categoria={cocheAEliminar}
+          confirmarEliminacion={confirmarEliminacion}
+        />
+
+
       </Container>
     </>
   );
-};  
+};
 
 export default Coches;

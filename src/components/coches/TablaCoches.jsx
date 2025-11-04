@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { Table, Spinner } from "react-bootstrap";
+import { Table, Spinner, Button } from "react-bootstrap";
 import BotonOrden from "../ordenamiento/BotonOrden";
 
-const TablaCoche = ({ coches, cargando }) => {
+const TablaCoche = ({ coches, cargando, abrirModalEdicion, abrirModalEliminacion }) => {
 
-// ----------------------------------------------------------------------------------------------
+  // ----------------------------------------------------------------------------------------------
   // Componente de tabla de categorias que recibe las categorias y el estado de carga como props.
   const [orden, setOrden] = useState({ campo: "Id_Coche", Marca: "asc", Fecha_Registro: 'asc' });
 
@@ -32,7 +32,7 @@ const TablaCoche = ({ coches, cargando }) => {
     return orden.Marca === "asc" ? comparacion : -comparacion;
   });
 
-// --------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------
 
   if (cargando) {
     return (
@@ -84,7 +84,24 @@ const TablaCoche = ({ coches, cargando }) => {
                 <td>{coche.Color}</td>
                 <td>{coche.Fecha_Registro}</td>
                 <td>{coche.Estado}</td>
-                <td>Acción</td>
+                <td>
+                  <Button
+                    variant="outline-warning"
+                    size="sm"
+                    className="me-2"
+                    onClick={() => abrirModalEdicion(coche)}
+                  >
+                    <i className="bi bi-pencil"></i>
+                  </Button>
+                  <Button
+                    variant="outline-danger"
+                    size="sm"
+                    onClick={() => abrirModalEliminacion(coche)}
+                  >
+                    <i className="bi bi-trash"></i>
+                  </Button>
+                </td>
+
               </tr>
             );
           })}
