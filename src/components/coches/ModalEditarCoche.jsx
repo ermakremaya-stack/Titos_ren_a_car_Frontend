@@ -1,3 +1,4 @@
+import { useEffect, uses } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 
 const ModalEdicionCoche = ({
@@ -35,7 +36,7 @@ const ModalEdicionCoche = ({
           <Form.Group className="mb-3" controlId="modelo">
             <Form.Label>Modelo del coche</Form.Label>
             <Form.Control
-              as="textarea"
+              type="text"
               name="modelo"
               value={cocheEditado?.modelo}
               onChange={manejarCambio}
@@ -46,7 +47,7 @@ const ModalEdicionCoche = ({
           <Form.Group className="mb-3" controlId="anio">
             <Form.Label>Año del coche</Form.Label>
             <Form.Control
-              as="textarea"
+              type="text"
               name="anio"
               value={cocheEditado?.anio}
               onChange={manejarCambio}
@@ -57,7 +58,7 @@ const ModalEdicionCoche = ({
           <Form.Group className="mb-3" controlId="placa">
             <Form.Label>Placa del coche</Form.Label>
             <Form.Control
-              as="textarea"
+              type="text"
               name="placa"
               value={cocheEditado?.placa}
               onChange={manejarCambio}
@@ -68,7 +69,7 @@ const ModalEdicionCoche = ({
           <Form.Group className="mb-3" controlId="color">
             <Form.Label>Color del coche</Form.Label>
             <Form.Control
-              as="textarea"
+              type="text"
               name="color"
               value={cocheEditado?.color}
               onChange={manejarCambio}
@@ -85,7 +86,7 @@ const ModalEdicionCoche = ({
         <Button
           variant="primary"
           onClick={guardarEdicion}
-          disabled={!cocheEditado?.nombre_categoria.trim()}
+          disabled={!cocheEditado?.marca?.trim()}
         >
           Guardar Cambios
         </Button>

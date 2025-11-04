@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Table, Spinner, Button } from "react-bootstrap";
 import BotonOrden from "../ordenamiento/BotonOrden";
 
+
 const TablaCoche = ({ coches, cargando, abrirModalEdicion, abrirModalEliminacion }) => {
 
   // ----------------------------------------------------------------------------------------------
@@ -75,15 +76,15 @@ const TablaCoche = ({ coches, cargando, abrirModalEdicion, abrirModalEliminacion
         <tbody>
           {cochesOrdenados.map((coche) => {
             return (
-              <tr key={coche.Id_Coche}>
-                <td>{coche.Id_Coche}</td>
-                <td>{coche.Marca}</td>
-                <td>{coche.Modelo}</td>
-                <td>{coche.Anio}</td>
-                <td>{coche.Placa}</td>
-                <td>{coche.Color}</td>
-                <td>{coche.Fecha_Registro}</td>
-                <td>{coche.Estado}</td>
+              <tr key={coche.id_coche}>
+                <td>{coche.id_coche}</td>
+                <td>{coche.marca}</td>
+                <td>{coche.modelo}</td>
+                <td>{coche.anio}</td>
+                <td>{coche.placa}</td>
+                <td>{coche.color}</td>
+                <td>{coche.fecha_registro}</td>
+                <td>{coche.estado}</td>
                 <td>
                   <Button
                     variant="outline-warning"

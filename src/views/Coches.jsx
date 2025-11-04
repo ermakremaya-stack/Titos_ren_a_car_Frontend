@@ -3,8 +3,8 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import TablaCoches from "../components/coches/TablaCoches.jsx";
 import CuadroBusqueda from "../components/busquedas/CuadroBusqueda.jsx";
 import ModalRegistroCoche from "../components/coches/ModalRegistroCoches.jsx";
-import ModalEdicionCategoria from '../components/coches/ModalEditarCoche.jsx';
-import ModalEliminacionCategoria from '../components/coches/ModalEliminarCoche.jsx';
+import ModalEdicionCoche from "../components/coches/ModalEditarCoche.jsx";
+import ModalEliminacionCoche from "../components/coches/ModalEliminarCoche.jsx";
 
 
 const Coches = () => {
@@ -30,23 +30,36 @@ const Coches = () => {
   const [cocheEditado, setCocheEditado] = useState(null);
   const [cocheAEliminar, setCocheAEliminar] = useState(null);
 
-
+  // ##############################################################################
+  
+  //Funsion para abrir el modal
   const abrirModalEdicion = (coche) => {
+    console.log("Coche resivido para editar:", coche)
     setCocheEditado({ ...coche });
     setMostrarModalEdicion(true);
   };
 
+  // ################################################################################
+
+
   const guardarEdicion = async () => {
-    if (!cocheEditado.placa.trim()) return;
+    console.log("🚀 Iniciando guardarEdicion con:", cocheEditado);
+    if (!cocheEditado.Placa.trim()) {
+      console.warn("⚠️ No hay placa válida:", cocheEditado?.Placa);
+      return;
+    }
     try {
       const respuesta = await fetch(`http://localhost:3000/api/actualizarcoche/${cocheEditado.id_coche}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(cocheEditado)
       });
+      console.log("📡 Respuesta del servidor:", respuesta);
+
       if (!respuesta.ok) throw new Error('Error al actualizar');
       setMostrarModalEdicion(false);
       await obtenerCoches();
+      console.log("✅ Coche actualizado correctamente");
     } catch (error) {
       console.error("Error al editar coche:", error);
       alert("No se pudo actualizar la coche.");
@@ -54,10 +67,15 @@ const Coches = () => {
   };
 
 
+
+
+
   const abrirModalEliminacion = (coche) => {
     setCocheAEliminar(coche);
     setMostrarModalEliminar(true);
   };
+
+
 
   const confirmarEliminacion = async () => {
     try {
@@ -73,6 +91,7 @@ const Coches = () => {
       alert("No se pudo eliminar la coche.");
     }
   };
+
 
 
 
@@ -103,23 +122,39 @@ const Coches = () => {
     }
   };
 
+  // ################################################################################
+  
+  //Creamos funsion para obtener datos de los coches
   const obtenerCoches = async () => {
     try {
       const respuesta = await fetch("http://localhost:3000/api/Coches");
+      const datos = await respuesta.json();
+      setCoches(datos);
       if (!respuesta.ok) {
         throw new Error("Error al obtener los coches");
       }
+      const cochesNormalizados = datos.map(c => ({
+        id_coche: c.Id_Coche,
+        marca: c.Marca,
+        modelo: c.Modelo,
+        anio: c.Anio,
+        placa: c.Placa,
+        color: c.Color,
+        fecha_registro: c.Fecha_Registro,
+        estado: c.Estado
+      }));
 
-      const datos = await respuesta.json();
-
-      setCoches(datos);
-      setCochesFiltrados(datos);
+      setCoches(cochesNormalizados);
+      setCochesFiltrados(cochesNormalizados);
       setCargando(false);
     } catch (error) {
       console.error(error.message);
       setCargando(false);
     }
   };
+
+  // #################################################################
+
 
   const manejarCambioBusqueda = (e) => {
     const texto = e.target.value.toLowerCase();
@@ -151,6 +186,7 @@ const Coches = () => {
               manejarCambioBusqueda={manejarCambioBusqueda}
             />
           </Col>
+
           <Col className="text-end">
             <Button
               className="color-boton"
@@ -177,7 +213,7 @@ const Coches = () => {
           agregarCoche={agregarCoche}
         />
 
-        <ModalEdicionCategoria
+        <ModalEdicionCoche
           mostrar={mostrarModalEdicion}
           setMostrar={setMostrarModalEdicion}
           categoriaEditada={cocheEditado}
@@ -185,7 +221,7 @@ const Coches = () => {
           guardarEdicion={guardarEdicion}
         />
 
-        <ModalEliminacionCategoria
+        <ModalEliminacionCoche
           mostrar={mostrarModalEliminar}
           setMostrar={setMostrarModalEliminar}
           categoria={cocheAEliminar}
