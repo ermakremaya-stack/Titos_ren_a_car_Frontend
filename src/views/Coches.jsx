@@ -34,7 +34,7 @@ const Coches = () => {
   
   //Funsion para abrir el modal
   const abrirModalEdicion = (coche) => {
-    console.log("Coche resivido para editar:", coche)
+    console.log("Coche recivido para editar:", { ...coche })
     setCocheEditado({ ...coche });
     setMostrarModalEdicion(true);
   };
@@ -196,6 +196,7 @@ const Coches = () => {
             </Button>
           </Col>
         </Row>
+        <br />
 
         <TablaCoches
           coches={cochesFiltrados}
@@ -216,8 +217,8 @@ const Coches = () => {
         <ModalEdicionCoche
           mostrar={mostrarModalEdicion}
           setMostrar={setMostrarModalEdicion}
-          categoriaEditada={cocheEditado}
-          setCategoriaEditada={setCocheEditado}
+          cocheEditado={cocheEditado}
+          setCocheEditado={setCocheEditado}
           guardarEdicion={guardarEdicion}
         />
 

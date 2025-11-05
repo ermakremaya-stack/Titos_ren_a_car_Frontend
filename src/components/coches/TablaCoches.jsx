@@ -7,16 +7,16 @@ const TablaCoche = ({ coches, cargando, abrirModalEdicion, abrirModalEliminacion
 
   // ----------------------------------------------------------------------------------------------
   // Componente de tabla de categorias que recibe las categorias y el estado de carga como props.
-  const [orden, setOrden] = useState({ campo: "Id_Coche", Marca: "asc", Fecha_Registro: 'asc' });
+  const [orden, setOrden] = useState({ campo: "Id_Coche", marca: "asc", fecha_registro: 'asc' });
 
 
   const manejarOrden = (campo) => {
     setOrden((prev) => ({
       campo,
-      Marca:
-        prev.campo === campo && prev.Marca === "asc" ? "desc" : "asc",
-      Fecha_Registro:
-        prev.campo === campo && prev.Fecha_Registro === "asc" ? "desc" : "asc",
+      marca:
+        prev.campo === campo && prev.marca === "asc" ? "desc" : "asc",
+      fecha_registro:
+        prev.campo === campo && prev.fecha_registro === "asc" ? "desc" : "asc",
     }));
   };
 
@@ -26,11 +26,11 @@ const TablaCoche = ({ coches, cargando, abrirModalEdicion, abrirModalEliminacion
     const valorB = b[orden.campo];
 
     if (typeof valorA === "number" && typeof valorB === "number") {
-      return orden.Marca === "asc" ? valorA - valorB : valorB - valorA;
+      return orden.marca === "asc" ? valorA - valorB : valorB - valorA;
     }
 
     const comparacion = String(valorA).localeCompare(String(valorB));
-    return orden.Marca === "asc" ? comparacion : -comparacion;
+    return orden.marca === "asc" ? comparacion : -comparacion;
   });
 
   // --------------------------------------------------------------------------------------------
@@ -51,12 +51,12 @@ const TablaCoche = ({ coches, cargando, abrirModalEdicion, abrirModalEliminacion
         <thead>
           <tr>
             <th>
-              <BotonOrden campo="Id_Coche" orden={orden} manejarOrden={manejarOrden}>
+              <BotonOrden campo="id_coche" orden={orden} manejarOrden={manejarOrden}>
                 ID
               </BotonOrden>
             </th>
             <th>
-              <BotonOrden campo="Marca" orden={orden} manejarOrden={manejarOrden}>
+              <BotonOrden campo="marca" orden={orden} manejarOrden={manejarOrden}>
                 Marca
               </BotonOrden>
             </th>
@@ -65,7 +65,7 @@ const TablaCoche = ({ coches, cargando, abrirModalEdicion, abrirModalEliminacion
             <th>Placa</th>
             <th>Color</th>
             <th>
-              <BotonOrden campo="Fecha_Registro" orden={orden} manejarOrden={manejarOrden}>
+              <BotonOrden campo="fecha_registro" orden={orden} manejarOrden={manejarOrden}>
                 Fecha de Registro
               </BotonOrden>
             </th>

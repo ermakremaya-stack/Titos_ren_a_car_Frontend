@@ -1,4 +1,4 @@
-import { useEffect, uses } from "react";
+import { useEffect } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 
 const ModalEdicionCoche = ({
