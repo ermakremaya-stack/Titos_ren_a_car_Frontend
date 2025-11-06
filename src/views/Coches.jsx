@@ -163,10 +163,21 @@ const cochesPaginadas = cochesFiltrados.slice(
   };
 
   // #################################################################
+  
+  //Creamos funsión para manejas cambios busquedas
+  const [textoVisible, setTextoVisible] = useState("")
 
+  setTextoVisible 
 
   const manejarCambioBusqueda = (e) => {
-    const texto = e.target.value.toLowerCase();
+    //Almacenamos valores de forma original
+    const original = e.target.value;
+    setTextoVisible(original);
+    //Comvertimos todo a minusculas para una busqueda más correcta
+    const texto = e.target.value
+    .toLowerCase()
+    .normalize("NFD") // separa acentos de letras
+    .replace(/[\u0300-\u036f]/g, ""); // elimina acentos
     setTextoBusqueda(texto);
 
     const filtrados = coches.filter(
@@ -175,7 +186,8 @@ const cochesPaginadas = cochesFiltrados.slice(
         coche.modelo.toLowerCase().includes(texto) ||
         coche.placa.toLowerCase().includes(texto) ||
         coche.color.toLowerCase().includes(texto) ||
-        coche.estado.toLowerCase().includes(texto)
+        coche.estado.toLowerCase().includes(texto) ||
+        coche.fecha_registro.toLowerCase().includes(texto)
     );
     setCochesFiltrados(filtrados)
   };
@@ -205,6 +217,7 @@ const cochesPaginadas = cochesFiltrados.slice(
             </Button>
           </Col>
         </Row>
+
         <br />
 
         <TablaCoches

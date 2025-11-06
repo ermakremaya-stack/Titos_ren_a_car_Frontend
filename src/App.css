@@ -41,3 +41,20 @@
 .carousel-control-next-icon {
   filter: invert(1); /* Invierte el blanco → negro */
 }
+
+/* Formato de los margenes entre texto */
+.metodos-container {
+  display: flex; 
+  justify-content: space-between; /* Espacio entre bloques */
+  margin-top: 10px;
+  gap: 20px; /* Separación */
+}
+
+/* Formato dentro de los "Bloques de texto" */
+.metodo {
+  flex: 1;
+  background: rgba(0,0,0,0.1); /* Fondo semi-transparente para resaltar */
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+}

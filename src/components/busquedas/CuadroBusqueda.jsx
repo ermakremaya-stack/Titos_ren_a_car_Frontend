@@ -2,7 +2,7 @@ import React from "react";
 
 import { Form, InputGroup } from "react-bootstrap";
 
-const CuadroBusquedas = ({ textoBusqueda, manejarCambioBusqueda }) => {
+const CuadroBusquedas = ({ textoVisible, manejarCambioBusqueda }) => {
   return (
     //Definimos el formato del cuadro de busqueda utilizando componentes de react-bootstrap
     <InputGroup className="md-3" style = {{ width: "100%"}}>
@@ -16,7 +16,7 @@ const CuadroBusquedas = ({ textoBusqueda, manejarCambioBusqueda }) => {
       <Form.Control
       type="text"
       placeholder="Buscar..."
-      value= {textoBusqueda}
+      value= {textoVisible}
       onChange={manejarCambioBusqueda}
       />
     </InputGroup>
