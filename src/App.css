@@ -1,23 +1,43 @@
+
 .margen-superior-main {
   margin-top: 40px;
   padding: 20px;
 }
 
+/*Color del texto de la marca*/
 .texto-marca {
     color: rgb(226, 43, 43) !important;
 }
 
+/*Color de texto genral*/
 .color-texto {
     color: rgb(0, 0, 0) !important;
     text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 0 0 8px 8px;
+    padding: 18px;
 }
 
+/*Color del encabezado*/
 .color-encabezado {
   background-color: brown !important;
   border-color: rgb(0, 0, 0) !important;
 }
 
+/*Color de los botones*/
 .color-boton{
   background-color: rgb(142, 42, 42) !important;
   border-color: rgb(0, 0, 0) !important;
+}
+
+/*Formato del carrucel color y pocisión se usa este nombre especifico por que  */
+.carousel-indicators [data-bs-target]{
+  background-color: black !important;
+  bottom: 60px !important;
+}
+
+/* Cambiar flechas del carrusel a negro cambiando valores por defecto de boostrap por eso los nombres raros */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(1); /* Invierte el blanco → negro */
 }

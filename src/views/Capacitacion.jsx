@@ -6,10 +6,14 @@ import BarraOpciones from "../components/capacitacion/BarraOpciones.jsx"
 const Capacitacion = () => {
   const [preguntaSeleccionada, setPreguntaSeleccionada] = useState(null);
 
+  const desSeleccionarPregunta = (codigo) => {
+      setPreguntaSeleccionada(prev => prev === codigo ? null : codigo);
+    };
+
   return (
     <>
     
-      <BarraOpciones onSelectPregunta={setPreguntaSeleccionada} />
+      <BarraOpciones onSelectPregunta={desSeleccionarPregunta} />
 
       <div style={{ padding: "20px" }}>
         {preguntaSeleccionada === "p1" && <ComoRegistrar />}

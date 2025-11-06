@@ -7,18 +7,25 @@ function ComoRegistrar() {
       <Carousel.Item>
         <img
           src={paso1}
+          alt="Paso 1"
           style={{ width: "100%", maxHeight: "450px", objectFit: "contain" }} />
-          <h3 className="color-texto">Paso 1</h3>
-          <p className="color-texto">Aquí explicas el primer paso con detalle.</p>
 
-      </Carousel.Item>
-
-      <Carousel.Item>
-        <img src={paso1} style={{ width: "100%", maxHeight: "450px", objectFit: "contain" }} />
-        <Carousel.Caption>
+        <div className="color-texto">
           <h3>Paso 1</h3>
           <p>Aquí explicas el primer paso con detalle.</p>
-        </Carousel.Caption>
+        </div>
+      </Carousel.Item>
+
+            <Carousel.Item>
+        <img
+          src={paso1}
+          alt="Paso 1"
+          style={{ width: "100%", maxHeight: "450px", objectFit: "contain" }} />
+
+        <div className="color-texto">
+          <h3>Paso 1</h3>
+          <p>Aquí explicas el primer paso con detalle.</p>
+        </div>
       </Carousel.Item>
     </Carousel>
   );
