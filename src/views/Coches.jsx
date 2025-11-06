@@ -53,8 +53,8 @@ const cochesPaginadas = cochesFiltrados.slice(
 
   const guardarEdicion = async () => {
     console.log("🚀 Iniciando guardarEdicion con:", cocheEditado);
-    if (!cocheEditado.Placa.trim()) {
-      console.warn("⚠️ No hay placa válida:", cocheEditado?.Placa);
+    if (!cocheEditado.placa.trim()) {
+      console.warn("⚠️ No hay placa válida:", cocheEditado?.placa);
       return;
     }
     try {
