@@ -1,9 +1,18 @@
 import React, { useState } from "react";
 import { Table, Spinner, Button } from "react-bootstrap";
 import BotonOrden from "../ordenamiento/BotonOrden";
+import Paginacion from "../ordenamiento/Paginacion";
 
-
-const TablaCoche = ({ coches, cargando, abrirModalEdicion, abrirModalEliminacion }) => {
+const TablaCoche = ({
+  coches,
+  cargando,
+  abrirModalEdicion,
+  abrirModalEliminacion,
+  totalElementos,
+  elementosPorPagina,
+  paginaActual,
+  establecerPaginaActual
+}) => {
 
   // ----------------------------------------------------------------------------------------------
   // Componente de tabla de categorias que recibe las categorias y el estado de carga como props.
@@ -108,6 +117,14 @@ const TablaCoche = ({ coches, cargando, abrirModalEdicion, abrirModalEliminacion
           })}
         </tbody>
       </Table>
+
+      <Paginacion
+        elementosPorPagina={elementosPorPagina}
+        totalElementos={totalElementos}
+        paginaActual={paginaActual}
+        establecerPaginaActual={establecerPaginaActual}
+      />
+
     </>
   );
 };

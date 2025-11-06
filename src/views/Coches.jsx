@@ -6,8 +6,10 @@ import ModalRegistroCoche from "../components/coches/ModalRegistroCoches.jsx";
 import ModalEdicionCoche from "../components/coches/ModalEditarCoche.jsx";
 import ModalEliminacionCoche from "../components/coches/ModalEliminarCoche.jsx";
 
-
 const Coches = () => {
+
+  const [paginaActual, establecerPaginaActual] = useState(1);
+  const elementosPorPagina = 5; // Número de productos por página
 
   const [coches, setCoches] = useState([]);
   const [cargando, setCargando] = useState(true);
@@ -24,6 +26,13 @@ const Coches = () => {
     color: '',
   });
 
+  // Calcular coches paginados
+const cochesPaginadas = cochesFiltrados.slice(
+  (paginaActual - 1) * elementosPorPagina,
+  paginaActual * elementosPorPagina
+);
+
+
   const [mostrarModalEdicion, setMostrarModalEdicion] = useState(false);
   const [mostrarModalEliminar, setMostrarModalEliminar] = useState(false);
 
@@ -31,7 +40,7 @@ const Coches = () => {
   const [cocheAEliminar, setCocheAEliminar] = useState(null);
 
   // ##############################################################################
-  
+
   //Funsion para abrir el modal
   const abrirModalEdicion = (coche) => {
     console.log("Coche recivido para editar:", { ...coche })
@@ -123,7 +132,7 @@ const Coches = () => {
   };
 
   // ################################################################################
-  
+
   //Creamos funsion para obtener datos de los coches
   const obtenerCoches = async () => {
     try {
@@ -199,11 +208,14 @@ const Coches = () => {
         <br />
 
         <TablaCoches
-          coches={cochesFiltrados}
+          coches={cochesPaginadas}
           cargando={cargando}
           abrirModalEdicion={abrirModalEdicion}
           abrirModalEliminacion={abrirModalEliminacion}
-
+          totalElementos={coches.length}
+          elementosPorPagina={elementosPorPagina}
+          paginaActual={paginaActual}
+          establecerPaginaActual={establecerPaginaActual}
         />
 
         <ModalRegistroCoche
