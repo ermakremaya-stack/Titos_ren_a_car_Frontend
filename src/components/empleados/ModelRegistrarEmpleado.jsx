@@ -1,6 +1,6 @@
 import { Modal, Form, Button } from "react-bootstrap";
 
-const ModalRegistroEmpleados = ({
+const ModalRegistroEmpleado = ({
   mostrarModal,
   setMostrarModal,
   nuevoEmpleado,
@@ -150,4 +150,4 @@ const ModalRegistroEmpleados = ({
   );
 };
 
-export default ModalRegistroEmpleados;
+export default ModalRegistroEmpleado;

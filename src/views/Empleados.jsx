@@ -1,17 +1,27 @@
 import { useState, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import TablaEmpleados from "../components/empleados/TablaEmpleados.jsx";
-import CuadroBusqueda from "../components/busquedas/CuadroBusqueda.jsx";
-import ModalRegistroEmpleados from "../components/empleados/ModelRegistrarEmpleados.jsx";
+import TablaEmpleados from "../components/empleados/TablaEmpleado.jsx";
+import CuadroBusquedas from "../components/busquedas/CuadroBusqueda.jsx";
+import ModalRegistroEmpleado from "../components/empleados/ModelRegistrarEmpleado.jsx";
+import ModalEdicionEmpleado from '../components/empleados/ModalEdicionEmpleado';
+import ModalEliminacionEmpleado from '../components/empleados/ModalEliminacionEmpleado';
 
 const Empleados = () => {
   const [empleados, setEmpleados] = useState([]);
   const [cargando, setCargando] = useState(true);
-
   const [empleadosFiltrados, setEmpleadosFiltrados] = useState([]);
   const [textoBusqueda, setTextoBusqueda] = useState("");
-
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [mostrarModalEdicion, setMostrarModalEdicion] = useState(false);
+  const [mostrarModalEliminar, setMostrarModalEliminar] = useState(false);
+  const [empleadoEditado, setEmpleadoEditado] = useState(null);
+  const [empleadoAEliminar, setEmpleadoAEliminar] = useState(null);
+  const [paginaActual, establecerPaginaActual] = useState(1);
+  const elementosPorPagina = 5;
+
+  // Fecha actual en formato YYYY-MM-DD (para input type="date")
+  const hoy = new Date().toISOString().split('T')[0];
+
   const [nuevoEmpleado, setNuevoEmpleado] = useState({
     Rol: "",
     Cedula: "",
@@ -22,7 +32,13 @@ const Empleados = () => {
     Direccion: "",
     Email: "",
     Contrasena: "",
+    fecha_contratacion: hoy
   });
+
+  const empleadosPaginados = empleadosFiltrados.slice(
+    (paginaActual - 1) * elementosPorPagina,
+    paginaActual * elementosPorPagina
+  );
 
   const manejarCambioInput = (e) => {
     const { name, value } = e.target;
@@ -30,28 +46,14 @@ const Empleados = () => {
   };
 
   const agregarEmpleado = async () => {
-    // validación mínima
-    if (
-      !String(nuevoEmpleado.Rol ?? "").trim() ||
-      !String(nuevoEmpleado.Cedula ?? "").trim() ||
-      !String(nuevoEmpleado.Nombre1 ?? "").trim() ||
-      !String(nuevoEmpleado.Apellido1 ?? "").trim() ||
-      !String(nuevoEmpleado.Direccion ?? "").trim() ||
-      !String(nuevoEmpleado.Contrasena ?? "").trim()
-    ) {
-      alert("Por favor complete los campos obligatorios.");
-      return;
-    }
-
+   if (!nuevoEmpleado.Nombre1?.trim() || !nuevoEmpleado.Apellido1?.trim()) return;
     try {
-      const respuesta = await fetch("http://localhost:3000/api/registrarempleado", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(nuevoEmpleado),
+      const respuesta = await fetch('http://localhost:3000/api/registrarEmpleado', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(nuevoEmpleado)
       });
-
-      if (!respuesta.ok) throw new Error("Error al guardar");
-
+      if (!respuesta.ok) throw new Error('Error al guardar');
       setNuevoEmpleado({
         Rol: "",
         Cedula: "",
@@ -62,67 +64,86 @@ const Empleados = () => {
         Direccion: "",
         Email: "",
         Contrasena: "",
+        fecha_contratacion: hoy
       });
-
       setMostrarModal(false);
       await obtenerEmpleados();
     } catch (error) {
-      console.error("Error al agregar Empleado:", error);
+      console.error("Error al agregar empleado:", error);
       alert("No se pudo guardar el empleado. Revisa la consola.");
     }
   };
 
   const obtenerEmpleados = async () => {
-    setCargando(true);
     try {
-      const respuesta = await fetch("http://localhost:3000/api/Empleados");
-      if (!respuesta.ok) throw new Error("Error al obtener los Empleados");
+      const respuesta = await fetch('http://localhost:3000/api/empleados'); // ← Cambiado
+      if (!respuesta.ok) throw new Error('Error al obtener empleados');
       const datos = await respuesta.json();
-      setEmpleados(datos || []);
-      setEmpleadosFiltrados(datos || []);
+      setEmpleados(datos);
+      setEmpleadosFiltrados(datos);
+      setCargando(false);
     } catch (error) {
       console.error(error.message);
-      setEmpleados([]);
-      setEmpleadosFiltrados([]);
-    } finally {
       setCargando(false);
     }
   };
 
-  const manejarCambioBusqueda = (e) => {
-    const texto = String(e.target?.value ?? "").toLowerCase();
-    setTextoBusqueda(texto);
+ const manejarCambioBusqueda = (e) => {
+  const texto = e.target.value.toLowerCase();
+  setTextoBusqueda(texto);
+  const filtrados = empleados.filter(emp =>
+    `${emp.Nombre1} ${emp.Nombre2} ${emp.Apellido1} ${emp.Apellido2}`.toLowerCase().includes(texto) ||
+    emp.Rol.toLowerCase().includes(texto)
+    // celular no existe → quítalo o agrégalo a la BD
+  );
+  setEmpleadosFiltrados(filtrados);
+};
 
-    const filtrados = (empleados || []).filter((empleado) => {
-      const rol = String(empleado?.Rol ?? "").toLowerCase();
-      const cedula = String(empleado?.Cedula ?? "").toLowerCase();
-      const nombre1 = String(empleado?.Nombre1 ?? "").toLowerCase();
-      const nombre2 = String(empleado?.Nombre2 ?? "").toLowerCase();
-      const apellido1 = String(empleado?.Apellido1 ?? "").toLowerCase();
-      const apellido2 = String(empleado?.Apellido2 ?? "").toLowerCase();
-      const direccion = String(empleado?.Direccion ?? "").toLowerCase();
-      const email = String(empleado?.Email ?? "").toLowerCase();
-      const contrasena = String(empleado?.Contrasena ?? "").toLowerCase();
+  const abrirModalEdicion = (empleado) => {
+    setEmpleadoEditado({ ...empleado }); // ← Carga fecha tal como está en BD
+    setMostrarModalEdicion(true);
+  };
 
-      return (
-        rol.includes(texto) ||
-        cedula.includes(texto) ||
-        nombre1.includes(texto) ||
-        nombre2.includes(texto) ||
-        apellido1.includes(texto) ||
-        apellido2.includes(texto) ||
-        direccion.includes(texto) ||
-        email.includes(texto) ||
-        contrasena.includes(texto)
-      );
+  const guardarEdicion = async () => {
+    try {
+      const respuesta = await fetch(`http://localhost:3000/api/empleados/${empleadoEditado.Id_Empleado}`, { // ← Cambiado
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(empleadoEditado)
+      });
+
+      if (!respuesta.ok) throw new Error('Error al actualizar');
+      setMostrarModalEdicion(false);
+      await obtenerEmpleados();
+    } catch (error) {
+      console.error("Error al editar empleado:", error);
+      alert("No se pudo actualizar el empleado.");
+    }
+  };
+
+  const abrirModalEliminacion = (empleado) => {
+    setEmpleadoAEliminar(empleado);
+    setMostrarModalEliminar(true);
+  };
+
+ const confirmarEliminacion = async () => {
+  try {
+    const respuesta = await fetch(`http://localhost:3000/api/empleados/${empleadoAEliminar.Id_Empleado}`, { // ← Cambiado
+      method: 'DELETE',
     });
 
-    setEmpleadosFiltrados(filtrados);
+      if (!respuesta.ok) throw new Error('Error al eliminar');
+      setMostrarModalEliminar(false);
+      setEmpleadoAEliminar(null);
+      await obtenerEmpleados();
+    } catch (error) {
+      console.error("Error al eliminar empleado:", error);
+      alert("No se pudo eliminar el empleado. Puede estar en uso.");
+    }
   };
 
   useEffect(() => {
     obtenerEmpleados();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -130,41 +151,56 @@ const Empleados = () => {
       <Container className="mt-4">
         <h4>Empleados</h4>
         <Row>
-          <Col lg={5} md={8} sm={8} xs={7}>
-            <CuadroBusqueda textoBusqueda={textoBusqueda} manejarCambioBusqueda={manejarCambioBusqueda} />
+          <Col lg={5} md={6} sm={8} xs={12}>
+            <CuadroBusquedas
+              textoBusqueda={textoBusqueda}
+              manejarCambioBusqueda={manejarCambioBusqueda}
+            />
           </Col>
           <Col className="text-end">
             <Button
-              variant="primary"
-              className="color_boton_registrar"
-              onClick={() => {
-                setNuevoEmpleado({
-                  Rol: "",
-                  Cedula: "",
-                  Nombre1: "",
-                  Nombre2: "",
-                  Apellido1: "",
-                  Apellido2: "",
-                  Direccion: "",
-                  Email: "",
-                  Contrasena: "",
-                });
-                setMostrarModal(true);
-              }}
+              className='color-boton-registro'
+              onClick={() => setMostrarModal(true)}
             >
               + Nuevo Empleado
             </Button>
           </Col>
+
+
         </Row>
+        <br />
+        <TablaEmpleados
+          empleados={empleadosPaginados}
+          cargando={cargando}
+          abrirModalEdicion={abrirModalEdicion}
+          abrirModalEliminacion={abrirModalEliminacion}
+          totalElementos={empleados.length}
+          elementosPorPagina={elementosPorPagina}
+          paginaActual={paginaActual}
+          establecerPaginaActual={establecerPaginaActual}
+        />
 
-        <TablaEmpleados empleados={empleadosFiltrados} cargando={cargando} />
-
-        <ModalRegistroEmpleados
+        <ModalRegistroEmpleado
           mostrarModal={mostrarModal}
           setMostrarModal={setMostrarModal}
           nuevoEmpleado={nuevoEmpleado}
           manejarCambioInput={manejarCambioInput}
           agregarEmpleado={agregarEmpleado}
+        />
+
+        <ModalEdicionEmpleado
+          mostrar={mostrarModalEdicion}
+          setMostrar={setMostrarModalEdicion}
+          empleadoEditado={empleadoEditado}
+          setEmpleadoEditado={setEmpleadoEditado}
+          guardarEdicion={guardarEdicion}
+        />
+
+        <ModalEliminacionEmpleado
+          mostrar={mostrarModalEliminar}
+          setMostrar={setMostrarModalEliminar}
+          empleado={empleadoAEliminar}
+          confirmarEliminacion={confirmarEliminacion}
         />
       </Container>
     </>
