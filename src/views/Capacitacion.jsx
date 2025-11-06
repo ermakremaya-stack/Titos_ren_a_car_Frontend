@@ -8,13 +8,17 @@ const Capacitacion = () => {
 
   return (
     <>
+    
       <BarraOpciones onSelectPregunta={setPreguntaSeleccionada} />
 
       <div style={{ padding: "20px" }}>
         {preguntaSeleccionada === "p1" && <ComoRegistrar />}
       </div>
+
     </>
+
   );
+
 };
 
 export default Capacitacion;
