@@ -91,11 +91,21 @@ const Empleados = () => {
  const manejarCambioBusqueda = (e) => {
   const texto = e.target.value.toLowerCase();
   setTextoBusqueda(texto);
-  const filtrados = empleados.filter(emp =>
-    `${emp.Nombre1} ${emp.Nombre2} ${emp.Apellido1} ${emp.Apellido2}`.toLowerCase().includes(texto) ||
-    emp.Rol.toLowerCase().includes(texto)
-    // celular no existe → quítalo o agrégalo a la BD
-  );
+
+  const filtrados = empleados.filter(emp => {
+    // Construir cadena de nombres/apellidos de forma segura
+    const nombreCompleto = [
+      emp.Nombre1 || "",
+      emp.Nombre2 || "",
+      emp.Apellido1 || "",
+      emp.Apellido2 || ""
+    ].join(" ").trim().toLowerCase();
+
+    const rol = (emp.Rol || "").toLowerCase();
+
+    return nombreCompleto.includes(texto) || rol.includes(texto);
+  });
+
   setEmpleadosFiltrados(filtrados);
 };
 
