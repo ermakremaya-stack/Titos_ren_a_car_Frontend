@@ -114,10 +114,10 @@ const Alquileres = () => {
 
             if (!respuesta.ok) throw new Error('Error al guardar');
 
-            // Limpiar y cerrar
+            
             setNuevoAlquiler({ fecha_inicio: '', fecha_fin: ''});
             setMostrarModal(false);
-            await obtenerAlquileres(); // Refresca la lista
+            await obtenerAlquileres(); 
         } catch (error) {
             console.error("Error al agregar el alquiler:", error);
             alert("No se pudo guardar el alquiler. Revisa la consola.");
@@ -139,7 +139,7 @@ const Alquileres = () => {
                 fecha_fin: a.Fecha_Fin
             }));
 
-            setAlquiler(alquileresNormalizados);
+            setAlquileres(alquileresNormalizados);
             setAlquileresFiltrados(alquileresNormalizados);
             setCargando(false);
 
@@ -155,10 +155,10 @@ const Alquileres = () => {
     setTextoVisible
 
     const manejarCambioBusqueda = (e) => {
-        //Almacenamos valores de forma original
+        
         const original = e.target.value;
         setTextoVisible(original);
-        //Comvertimos todo a minusculas para una busqueda más correcta
+        
         const texto = e.target.value
             .toLowerCase()
             .normalize("NFD") // separa acentos de letras

@@ -14,8 +14,6 @@ const TablaAlquiler = ({
     establecerPaginaActual
 }) => {
 
-    // ----------------------------------------------------------------------------------------------
-    // Componente de tabla de alquileres que recibe los alquileres y el estado de carga como props.y 
     const [orden, setOrden] = useState({ campo: "Id_Alquiler", fecha_inicio: "asc", fecha_fin: 'asc' });
 
 
@@ -97,7 +95,7 @@ const TablaAlquiler = ({
                                     <Button
                                         variant="outline-danger"
                                         size="sm"
-                                        onClick={() => abrirModalEliminacion(coche)}
+                                        onClick={() => abrirModalEliminacion(alquiler)}
                                     >
                                         <i className="bi bi-trash"></i>
                                     </Button>
