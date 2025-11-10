@@ -1,6 +1,17 @@
-import { Table, Spinner } from "react-bootstrap";
+import { Table, Spinner, Button} from "react-bootstrap";
+import Paginacion from "../ordenamiento/Paginacion.jsx";
+import React from "react";
+import BotonOrden from "../ordenamiento/BotonOrden.jsx";
 
-const TablaUsuarios = ({ usuarios, cargando }) => {
+const TablaUsuarios = ({ usuarios,
+   cargando,
+    abrirModalEditar,
+    abrirModalEliminar,
+    elementosPorPagina,
+    totalElementos,
+    paginaActual,
+    establecerPaginaActual
+  }) => {
 
   if (cargando) {
     return (
@@ -48,12 +59,35 @@ const TablaUsuarios = ({ usuarios, cargando }) => {
                 <td>{usuario.Email}</td>
                 <td>{usuario.Licencia}</td>
                 <td>{usuario.Contrasena}</td>
-                <td>Acción</td>
+                <td>
+                  <Button
+                    variant="outline-warning"
+                  size="sm"
+                  className="me-2"
+                  onClick={() => abrirModalEditar(usuario)}
+                  >
+                    <i className="bi bi-pencil"></i>
+                  </Button>
+                  <Button
+                    variant="outline-danger"
+                  size="sm"
+                  onClick={() => abrirModalEliminar(usuario)}
+                  >
+                    <i className="bi bi-trash"></i>
+                  </Button>
+                </td>
               </tr>
             );
           })}
         </tbody>
       </Table>
+
+      <Paginacion
+        elementosPorPagina={elementosPorPagina}
+        totalElementos={totalElementos}
+        paginaActual={paginaActual}
+        establecerPaginaActual={establecerPaginaActual}
+      />
     </>
   );
 };
