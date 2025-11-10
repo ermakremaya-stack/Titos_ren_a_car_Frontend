@@ -8,8 +8,9 @@ import Coches from "./views/Coches.jsx";
 import Empleados from "./views/Empleados.jsx";
 import Usuarios from './views/Usuarios.jsx';
 import Capacitacion from "./views/Capacitacion.jsx";
-
+import Alquileres from './views/Alquiler.jsx';
 import "./App.css";
+
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
             <Route path="/empleados" element={<Empleados />} />
             <Route path="/capacitacion" element={<Capacitacion />} />
             <Route path="/usuarios" element={<Usuarios />} />
+            <Route path="/alquiler" element={<Alquileres />} />
             <Route path="*" element={<h2> 404 - Pagina no encontrada</h2>} />
           </Routes>
         </main>

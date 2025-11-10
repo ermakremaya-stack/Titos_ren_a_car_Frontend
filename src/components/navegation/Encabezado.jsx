@@ -76,6 +76,13 @@ const Encabezado = () => {
 
               <Nav.Link
                 className={mostrarMenu ? "texto-marca" : "text-white"}
+                onClick={() => manejarNavegacion("/alquiler")}
+              >
+                {mostrarMenu ? <i className="bi-house-fill me-2"></i> : null} Alquiler
+              </Nav.Link>
+
+              <Nav.Link
+                className={mostrarMenu ? "texto-marca" : "text-white"}
                 onClick={() => manejarNavegacion("/capacitacion")}
               >
                 {mostrarMenu ? <i className="bi bi-building-fill-gear"></i> : null} Capacitación

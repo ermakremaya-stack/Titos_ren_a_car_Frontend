@@ -122,7 +122,7 @@ const TablaEmpleado = ({
               <td>{empleado.Direccion}</td>
               <td>{empleado.Email}</td>
               <td>{empleado.Contrasena}</td>
-               <td>{empleado.Fecha_Contratacion}</td>
+              <td>{empleado.Fecha_Contratacion}</td>
               <td>
                 <Button
                   variant="outline-warning"
