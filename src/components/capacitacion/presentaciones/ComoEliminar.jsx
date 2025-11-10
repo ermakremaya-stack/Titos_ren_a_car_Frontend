@@ -1,9 +1,9 @@
 import Carousel from "react-bootstrap/Carousel";
-import paso1 from "../../../assets/capacitacion/comoEditar/paso1.png";
-import paso2 from "../../../assets/capacitacion/comoEditar/paso2.png";
-import paso3 from "../../../assets/capacitacion/comoEditar/paso3.png";
+import paso1 from "../../../assets/capacitacion/comoEliminar/paso1.png";
+import paso2 from "../../../assets/capacitacion/comoEliminar/paso2.png";
+import paso3 from "../../../assets/capacitacion/comoEliminar/paso3.png";
 
-function ComoEditar() {
+function ComoEliminar() {
   return (
     <Carousel>
       <Carousel.Item>
@@ -14,7 +14,7 @@ function ComoEditar() {
 
         <div className="color-texto">
           <h3>Paso 1</h3>
-          <p>Busque el registro que desee registrar y seleccione el botón de editar ✏️ ubicado al lado izquierdo del registro.</p>
+          <p>Busque el registro que desee eliminar y seleccione el botón de papelera 🗑️ ubicado al lado izquierdo del registro.</p>
         </div>
       </Carousel.Item>
 
@@ -26,7 +26,7 @@ function ComoEditar() {
 
         <div className="color-texto">
           <h3>Paso 2</h3>
-          <p>Realice los cambios que desea y de click en el botón de "Guardar cambios".</p>
+          <p>Confirme que desea eliminar el registro precionando "Eliminar".</p>
         </div>
       </Carousel.Item>
 
@@ -45,4 +45,4 @@ function ComoEditar() {
   );
 }
 
-export default ComoEditar;
+export default ComoEliminar;

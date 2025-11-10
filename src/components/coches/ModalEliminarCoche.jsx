@@ -6,6 +6,8 @@ const ModalEliminacionCoche = ({
   coche,
   confirmarEliminacion,
 }) => {
+     if (!coche) return null; // si no hay coche seleccionado, no mostrar nada
+
   return (
     <Modal show={mostrar} onHide={() => setMostrar(false)} centered>
       <Modal.Header closeButton>
@@ -13,9 +15,17 @@ const ModalEliminacionCoche = ({
       </Modal.Header>
       <Modal.Body>
         <p>
-          ¿Estás seguro de que deseas eliminar el coche{" "}
-          <strong>"{coche?.placa}"</strong>?
+          ¿Estás seguro de que deseas eliminar el siguiente coche?
         </p>
+
+
+        <p>
+          <strong>ID:</strong> {coche.id_coche} <br />
+          <strong>Marca:</strong> {coche.marca} <br />
+          <strong>Modelo:</strong> {coche.modelo} <br />
+          <strong>Año:</strong> {coche.anio} <br />
+        </p>
+
         <p className="text-muted small">
           Esta acción no se puede deshacer.
         </p>

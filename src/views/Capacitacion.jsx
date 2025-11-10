@@ -2,6 +2,8 @@ import React from "react";
 import { useState } from "react";
 import ComoRegistrar from "../components/capacitacion/presentaciones/ComoRegistrar.jsx"
 import BarraOpciones from "../components/capacitacion/BarraOpciones.jsx"
+import ComoEditar from "../components/capacitacion/presentaciones/ComoRegistrar.jsx";
+import ComoEliminar from "../components/capacitacion/presentaciones/ComoEliminar.jsx";
 
 const Capacitacion = () => {
   const [preguntaSeleccionada, setPreguntaSeleccionada] = useState(null);
@@ -12,11 +14,13 @@ const Capacitacion = () => {
 
   return (
     <>
-    
+      <br/>
       <BarraOpciones onSelectPregunta={desSeleccionarPregunta} />
 
       <div style={{ padding: "20px" }}>
         {preguntaSeleccionada === "p1" && <ComoRegistrar />}
+        {preguntaSeleccionada === "p2" && <ComoEditar />}
+        {preguntaSeleccionada === "p3" && <ComoEliminar />}
       </div>
 
     </>

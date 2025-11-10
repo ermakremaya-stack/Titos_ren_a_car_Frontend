@@ -16,6 +16,14 @@ function BarraOpciones({ onSelectPregunta }) {
               ¿Cómo registrar?
             </Nav.Link>
 
+            <Nav.Link onClick={() => onSelectPregunta("p2")}>
+              ¿Cómo editar?
+            </Nav.Link>
+
+            <Nav.Link onClick={() => onSelectPregunta("p3")}>
+              ¿Cómo eliminar?
+            </Nav.Link>
+
           </Nav>
 
         </Navbar.Collapse>

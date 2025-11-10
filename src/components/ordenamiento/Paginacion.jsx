@@ -43,7 +43,7 @@ const Paginacion = ({
   return (
     <Row className="mt-3">
       <Col className="d-flex justify-content-center">
-        <Pagination>
+        <Pagination>          
           <Pagination.First
             onClick={() => manejarCambioPagina(1)}
             disabled={paginaActual === 1}

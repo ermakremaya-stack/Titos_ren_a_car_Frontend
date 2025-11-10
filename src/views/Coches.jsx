@@ -50,11 +50,9 @@ const cochesPaginadas = cochesFiltrados.slice(
 
   // ################################################################################
 
-
   const guardarEdicion = async () => {
-    console.log("🚀 Iniciando guardarEdicion con:", cocheEditado);
     if (!cocheEditado.placa.trim()) {
-      console.warn("⚠️ No hay placa válida:", cocheEditado?.placa);
+      console.warn("No hay placa válida:", cocheEditado?.placa);
       return;
     }
     try {
@@ -68,15 +66,11 @@ const cochesPaginadas = cochesFiltrados.slice(
       if (!respuesta.ok) throw new Error('Error al actualizar');
       setMostrarModalEdicion(false);
       await obtenerCoches();
-      console.log("✅ Coche actualizado correctamente");
     } catch (error) {
       console.error("Error al editar coche:", error);
       alert("No se pudo actualizar la coche.");
     }
   };
-
-
-
 
 
   const abrirModalEliminacion = (coche) => {
@@ -250,7 +244,7 @@ const cochesPaginadas = cochesFiltrados.slice(
         <ModalEliminacionCoche
           mostrar={mostrarModalEliminar}
           setMostrar={setMostrarModalEliminar}
-          categoria={cocheAEliminar}
+          coche={cocheAEliminar}
           confirmarEliminacion={confirmarEliminacion}
         />
 
