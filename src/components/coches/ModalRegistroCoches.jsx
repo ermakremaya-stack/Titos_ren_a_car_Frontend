@@ -73,7 +73,7 @@ const ModalRegistroCoche = ({
             <Form.Group className="mb-3" controlId="color">
             <Form.Label>Color del coche</Form.Label>
             <Form.Control
-              type="text"
+              type="color"
               name="color"
               value={nuevoCoche.color}
               onChange={manejarCambioInput}

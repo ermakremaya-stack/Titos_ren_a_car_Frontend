@@ -58,3 +58,19 @@
   border-radius: 8px;
   text-align: center;
 }
+
+
+/*Formato de presentación de colores en la tabla coches*/
+.vista-color {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/*Formato de la caja de color en la tabla coches*/
+.caja-color {
+  width: 25px;
+  height: 25px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

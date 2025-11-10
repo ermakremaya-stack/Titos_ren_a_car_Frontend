@@ -42,6 +42,7 @@ const TablaCoche = ({
     return orden.marca === "asc" ? comparacion : -comparacion;
   });
 
+
   // --------------------------------------------------------------------------------------------
 
   if (cargando) {
@@ -91,7 +92,15 @@ const TablaCoche = ({
                 <td>{coche.modelo}</td>
                 <td>{coche.anio}</td>
                 <td>{coche.placa}</td>
-                <td>{coche.color}</td>
+                <td>
+                  <div className="vista-color">
+                    <div 
+                      className="caja-color"
+                      style = {{ backgroundColor: coche.color }}
+                      title = {coche.color}
+                    ></div>
+                  </div>
+                </td>
                 <td>{coche.fecha_registro}</td>
                 <td>{coche.estado}</td>
                 <td>
