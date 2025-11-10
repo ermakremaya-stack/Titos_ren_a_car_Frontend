@@ -25,7 +25,7 @@ const ModalRegistroAlquiler = ({
                             name="fecha_inicio"
                             value={nuevoAlquiler.fecha_inicio}
                             onChange={manejarCambioInput}
-                            placeholder="Ej. 10/07/07"
+                            placeholder="Ej. 2023-03-01 09:00:00',"
                             maxLength={20}
                             required
                         />
@@ -38,7 +38,7 @@ const ModalRegistroAlquiler = ({
                             name="fecha_fin"
                             value={nuevoAlquiler.fecha_fin}
                             onChange={manejarCambioInput}
-                            placeholder="fecha fin del alquiler"
+                            placeholder="2024-03-10 17:30:00"
                             maxLength={20}
                             required
                         />
