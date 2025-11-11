@@ -9,14 +9,14 @@ const ModalRegistroCoche = ({
   agregarCoche,
 }) => {
   return (
-    <Modal 
-    backdrop="static"
+    <Modal
+      backdrop="static"
       show={mostrarModal} onHide={() => setMostrarModal(false)} centered>
       <Modal.Header closeButton>
         <Modal.Title>Agregar Nuevo Coche</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        
+
         <Form>
           <Form.Group className="mb-3" controlId="marca">
             <Form.Label>Marca del Coche</Form.Label>
@@ -68,9 +68,9 @@ const ModalRegistroCoche = ({
               placeholder="Ej: 1225-5642"
               required
             />
-            </Form.Group>
+          </Form.Group>
 
-            <Form.Group className="mb-3" controlId="color">
+          <Form.Group className="mb-3" controlId="color">
             <Form.Label>Color del coche</Form.Label>
             <Form.Control
               type="color"
@@ -80,6 +80,18 @@ const ModalRegistroCoche = ({
               placeholder="Ej: Rojo"
               maxLength={20}
               required
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="valor_dia">
+            <Form.Label>Valor por dia del coche</Form.Label>
+            <Form.Control
+              type="double"
+              name="valor_dia"
+              value={nuevoCoche.valor_dia}
+              onChange={manejarCambioInput}
+              placeholder="Modelo del coche"
+              maxLength={50}
             />
           </Form.Group>
 

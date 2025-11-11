@@ -77,6 +77,19 @@ const ModalEdicionCoche = ({
               maxLength={50}
             />
           </Form.Group>
+
+          <Form.Group className="mb-3" controlId="valor_dia">
+            <Form.Label>Valor por dia del coche</Form.Label>
+            <Form.Control
+              type="double"
+              name="valor_dia"
+              value={cocheEditado?.valor_dia}
+              onChange={manejarCambio}
+              placeholder="Modelo del coche"
+              maxLength={50}
+            />
+          </Form.Group>
+
         </Form>
       </Modal.Body>
       <Modal.Footer>

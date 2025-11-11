@@ -16,7 +16,7 @@ const TablaCoche = ({
 
   // ----------------------------------------------------------------------------------------------
   // Componente de tabla de categorias que recibe las categorias y el estado de carga como props.
-  const [orden, setOrden] = useState({ campo: "Id_Coche", marca: "asc", fecha_registro: 'asc' });
+  const [orden, setOrden] = useState({ campo: "Id_Coche", marca: "asc", fecha_registro: 'asc', valor_dia: 'asc' });
 
 
   const manejarOrden = (campo) => {
@@ -26,6 +26,8 @@ const TablaCoche = ({
         prev.campo === campo && prev.marca === "asc" ? "desc" : "asc",
       fecha_registro:
         prev.campo === campo && prev.fecha_registro === "asc" ? "desc" : "asc",
+      valor_dia:
+        prev.campo === campo && prev.valor_dia === "asc" ? "desc" : "asc",
     }));
   };
 
@@ -79,6 +81,11 @@ const TablaCoche = ({
                 Fecha de Registro
               </BotonOrden>
             </th>
+            <th className="text-center" >
+              <BotonOrden campo="valor_dia" orden={orden} manejarOrden={manejarOrden}>
+                Valor por dia
+              </BotonOrden>
+            </th>
             <th>Estado</th>
             <th>Acciones</th>
           </tr>
@@ -94,14 +101,15 @@ const TablaCoche = ({
                 <td>{coche.placa}</td>
                 <td>
                   <div className="vista-color">
-                    <div 
+                    <div
                       className="caja-color"
-                      style = {{ backgroundColor: coche.color }}
-                      title = {coche.color}
+                      style={{ backgroundColor: coche.color }}
+                      title={coche.color}
                     ></div>
                   </div>
                 </td>
                 <td>{coche.fecha_registro}</td>
+                <td className="text-center">{coche.valor_dia} $</td>
                 <td>{coche.estado}</td>
                 <td>
                   <Button

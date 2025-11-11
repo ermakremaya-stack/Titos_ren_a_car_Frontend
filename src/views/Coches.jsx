@@ -24,6 +24,7 @@ const Coches = () => {
     anio: 0,
     placa: '',
     color: '',
+    valor_dia: ''
   });
 
   // Calcular coches paginados
@@ -132,7 +133,7 @@ const cochesPaginadas = cochesFiltrados.slice(
       }
 
       // Limpiar y cerrar
-      setNuevoCoche({ marca: '', modelo: '', anio: 0, placa: '', color: '' });
+      setNuevoCoche({ marca: '', modelo: '', anio: 0, placa: '', color: '', valor_dia: '' });
       setMostrarModal(false);
       await obtenerCoches(); // Refresca la lista
 
@@ -161,6 +162,7 @@ const cochesPaginadas = cochesFiltrados.slice(
         placa: c.Placa,
         color: c.Color,
         fecha_registro: c.Fecha_Registro,
+        valor_dia: c.Valor_Dia,
         estado: c.Estado
       }));
 
@@ -198,6 +200,7 @@ const cochesPaginadas = cochesFiltrados.slice(
         coche.placa.toLowerCase().includes(texto) ||
         coche.color.toLowerCase().includes(texto) ||
         coche.estado.toLowerCase().includes(texto) ||
+        coche.valor_dia.toLowerCase().includes(texto) ||
         coche.fecha_registro.toLowerCase().includes(texto)
     );
     setCochesFiltrados(filtrados)
