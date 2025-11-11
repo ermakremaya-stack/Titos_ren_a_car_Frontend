@@ -1,84 +1,131 @@
-import { Table, Spinner, Button} from "react-bootstrap";
-import Paginacion from "../ordenamiento/Paginacion.jsx";
-import React from "react";
+import React, { useState } from "react";
+import { Table, Spinner, Button } from "react-bootstrap";
 import BotonOrden from "../ordenamiento/BotonOrden.jsx";
+import Paginacion from "../ordenamiento/Paginacion.jsx";
 
-const TablaUsuarios = ({ usuarios,
-   cargando,
-    abrirModalEditar,
-    abrirModalEliminar,
-    elementosPorPagina,
-    totalElementos,
-    paginaActual,
-    establecerPaginaActual
-  }) => {
+const TablaUsuarios = ({
+  usuarios,
+  cargando,
+  abrirModalEditar,
+  abrirModalEliminar,
+  elementosPorPagina,
+  totalElementos,
+  paginaActual,
+  establecerPaginaActual,
+}) => {
+  const [orden, setOrden] = useState({
+    campo: "Id_Usuario",
+    Id_Usuario: "asc",
+    Nombre1: "asc",
+    Apellido1: "asc",
+    Telefono: "asc",
+    Direccion: "asc",
+  });
+
+  const manejarOrden = (campo) => {
+    setOrden((prev) => ({
+      ...prev,
+      campo,
+      [campo]: prev[campo] === "asc" ? "desc" : "asc",
+    }));
+  };
+
+  const usuariosOrdenados = [...usuarios].sort((a, b) => {
+    const campo = orden.campo;
+    const direccion = orden[campo];
+    const valorA = a[campo];
+    const valorB = b[campo];
+
+    if (typeof valorA === "number" && typeof valorB === "number") {
+      return direccion === "asc" ? valorA - valorB : valorB - valorA;
+    }
+
+    const comparacion = String(valorA).localeCompare(String(valorB));
+    return direccion === "asc" ? comparacion : -comparacion;
+  });
 
   if (cargando) {
     return (
-      <>
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Cargando...</span>
-        </Spinner>
-      </>
+      <Spinner animation="border" role="status">
+        <span className="visually-hidden">Cargando...</span>
+      </Spinner>
     );
-  };
+  }
 
   return (
-      <>
-          <Table striped bordered hover>
-              <thead>
-                  <tr>
-                      <th>ID</th>
-                      <th>Rol</th>
-                      <th>Cedula</th>
-                      <th>Nombre1</th>
-                      <th>Nombre2</th>
-                      <th>Apellido1</th>
-                      <th>Apellido2</th>
-                      <th>Telefono</th>
-                      <th>Direccion</th>
-                      <th>Email</th>
-                      <th>Licencia</th>
-                      <th>Contrasena</th>
-                      <th>Acciones</th>
-                  </tr>
-              </thead>
+    <>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>
+              <BotonOrden campo="Id_Usuario" orden={orden} manejarOrden={manejarOrden}>
+                ID
+              </BotonOrden>
+            </th>
+            <th>Rol</th>
+            <th>Cédula</th>
+            <th>
+              <BotonOrden campo="Nombre1" orden={orden} manejarOrden={manejarOrden}>
+                Nombre 1
+              </BotonOrden>
+            </th>
+            <th>Nombre 2</th>
+            <th>
+              <BotonOrden campo="Apellido1" orden={orden} manejarOrden={manejarOrden}>
+                Apellido 1
+              </BotonOrden>
+            </th>
+            <th>Apellido 2</th>
+            <th>
+              <BotonOrden campo="Telefono" orden={orden} manejarOrden={manejarOrden}>
+                Teléfono
+              </BotonOrden>
+            </th>
+            <th>
+              <BotonOrden campo="Direccion" orden={orden} manejarOrden={manejarOrden}>
+                Dirección
+              </BotonOrden>
+            </th>
+            <th>Email</th>
+            <th>Licencia</th>
+            <th>Contraseña</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
         <tbody>
-          {usuarios.map((usuario) => {
-            return (
-              <tr key={usuario.Id_Usuario}>
-                <td>{usuario.Id_Usuario}</td>
-                <td>{usuario.Rol}</td>
-                <td>{usuario.Cedula}</td>
-                <td>{usuario.Nombre1}</td>
-                <td>{usuario.Nombre2}</td>
-                <td>{usuario.Apellido1}</td>
-                <td>{usuario.Apellido2}</td>
-                <td>{usuario.Telefono}</td>
-                <td>{usuario.Direccion}</td>
-                <td>{usuario.Email}</td>
-                <td>{usuario.Licencia}</td>
-                <td>{usuario.Contrasena}</td>
-                <td>
-                  <Button
-                    variant="outline-warning"
+          {usuariosOrdenados.map((usuario) => (
+            <tr key={usuario.Id_Usuario}>
+              <td>{usuario.Id_Usuario}</td>
+              <td>{usuario.Rol}</td>
+              <td>{usuario.Cedula}</td>
+              <td>{usuario.Nombre1}</td>
+              <td>{usuario.Nombre2}</td>
+              <td>{usuario.Apellido1}</td>
+              <td>{usuario.Apellido2}</td>
+              <td>{usuario.Telefono}</td>
+              <td>{usuario.Direccion}</td>
+              <td>{usuario.Email}</td>
+              <td>{usuario.Licencia}</td>
+              <td>{usuario.Contrasena}</td>
+              <td>
+                <Button
+                  variant="outline-warning"
                   size="sm"
                   className="me-2"
                   onClick={() => abrirModalEditar(usuario)}
-                  >
-                    <i className="bi bi-pencil"></i>
-                  </Button>
-                  <Button
-                    variant="outline-danger"
+                >
+                  <i className="bi bi-pencil"></i>
+                </Button>
+                <Button
+                  variant="outline-danger"
                   size="sm"
                   onClick={() => abrirModalEliminar(usuario)}
-                  >
-                    <i className="bi bi-trash"></i>
-                  </Button>
-                </td>
-              </tr>
-            );
-          })}
+                >
+                  <i className="bi bi-trash"></i>
+                </Button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </Table>
 
