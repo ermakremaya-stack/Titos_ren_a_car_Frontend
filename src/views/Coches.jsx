@@ -48,20 +48,27 @@ const cochesPaginadas = cochesFiltrados.slice(
     setMostrarModalEdicion(true);
   };
 
-  // ################################################################################
+  //                ################################################
 
   const guardarEdicion = async () => {
     if (!cocheEditado.placa.trim()) {
       console.warn("No hay placa válida:", cocheEditado?.placa);
       return;
     }
+    
     try {
       const respuesta = await fetch(`http://localhost:3000/api/actualizarcoche/${cocheEditado.id_coche}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(cocheEditado)
       });
-      console.log("📡 Respuesta del servidor:", respuesta);
+
+      const data = await respuesta.json();
+
+      if (!respuesta.ok) {
+        alert(data.error || "No se pudo editar el coche");
+        return;
+      }
 
       if (!respuesta.ok) throw new Error('Error al actualizar');
       setMostrarModalEdicion(false);
@@ -72,6 +79,7 @@ const cochesPaginadas = cochesFiltrados.slice(
     }
   };
 
+  // ##########################################################################################
 
   const abrirModalEliminacion = (coche) => {
     setCocheAEliminar(coche);
@@ -103,6 +111,9 @@ const cochesPaginadas = cochesFiltrados.slice(
     setNuevoCoche(prev => ({ ...prev, [name]: value }));
   };
 
+  // ###################################################################
+  
+  //Creamos coche
   const agregarCoche = async () => {
     if (!nuevoCoche.placa.trim()) return;
 
@@ -113,15 +124,21 @@ const cochesPaginadas = cochesFiltrados.slice(
         body: JSON.stringify(nuevoCoche)
       });
 
-      if (!respuesta.ok) throw new Error('Error al guardar');
+      const data = await respuesta.json();
+
+      if (!respuesta.ok) {
+        alert(data.error || "No se pudo guardar el coche");
+        return;
+      }
 
       // Limpiar y cerrar
       setNuevoCoche({ marca: '', modelo: '', anio: 0, placa: '', color: '' });
       setMostrarModal(false);
       await obtenerCoches(); // Refresca la lista
+
     } catch (error) {
       console.error("Error al agregar el coche:", error);
-      alert("No se pudo guardar el coche. Revisa la consola.");
+      alert("No se pudo guardar el coche.");
     }
   };
 

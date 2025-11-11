@@ -71,9 +71,9 @@ const TablaCoche = ({
               </BotonOrden>
             </th>
             <th>Modelo</th>
-            <th>Año del modelo</th>
+            <th className="text-center">Año del modelo</th>
             <th>Placa</th>
-            <th>Color</th>
+            <th className="text-center">Color</th>
             <th>
               <BotonOrden campo="fecha_registro" orden={orden} manejarOrden={manejarOrden}>
                 Fecha de Registro
@@ -90,7 +90,7 @@ const TablaCoche = ({
                 <td>{coche.id_coche}</td>
                 <td>{coche.marca}</td>
                 <td>{coche.modelo}</td>
-                <td>{coche.anio}</td>
+                <td className="text-center">{coche.anio}</td>
                 <td>{coche.placa}</td>
                 <td>
                   <div className="vista-color">

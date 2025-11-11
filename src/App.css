@@ -63,6 +63,7 @@
 /*Formato de presentación de colores en la tabla coches*/
 .vista-color {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 8px;
 }
