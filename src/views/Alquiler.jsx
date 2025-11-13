@@ -9,10 +9,15 @@ import ModalEliminacionAlquiler from "../components/alquileres/ModalEliminarAlqu
 const Alquileres = () => {
 
     const [paginaActual, establecerPaginaActual] = useState(1);
-    const elementosPorPagina = 5; 
+    const elementosPorPagina = 5;
 
     const [alquileres, setAlquileres] = useState([]);
     const [cargando, setCargando] = useState(true);
+
+    const usuario = JSON.parse(localStorage.getItem("usuarioTito")) || {};
+    const puedeEliminar = usuario.rol !== "Usuario"; // Solo NO clientes
+
+
 
     const [alquileresFiltrados, setAlquileresFiltrados] = useState([]);
     const [textoBusqueda, setTextoBusqueda] = useState('');
@@ -73,10 +78,13 @@ const Alquileres = () => {
 
 
     const abrirModalEliminacion = (alquiler) => {
+        if (!puedeEliminar) {
+            alert("No tienes permiso para eliminar alquileres.");
+            return;
+        }
         setAlquilerEliminar(alquiler);
         setMostrarModalEliminar(true);
     };
-
 
 
     const confirmarEliminacion = async () => {
@@ -114,10 +122,10 @@ const Alquileres = () => {
 
             if (!respuesta.ok) throw new Error('Error al guardar');
 
-            
-            setNuevoAlquiler({ fecha_inicio: '', fecha_fin: ''});
+
+            setNuevoAlquiler({ fecha_inicio: '', fecha_fin: '' });
             setMostrarModal(false);
-            await obtenerAlquileres(); 
+            await obtenerAlquileres();
         } catch (error) {
             console.error("Error al agregar el alquiler:", error);
             alert("No se pudo guardar el alquiler. Revisa la consola.");
@@ -155,10 +163,10 @@ const Alquileres = () => {
     setTextoVisible
 
     const manejarCambioBusqueda = (e) => {
-        
+
         const original = e.target.value;
         setTextoVisible(original);
-        
+
         const texto = e.target.value
             .toLowerCase()
             .normalize("NFD") // separa acentos de letras
@@ -168,7 +176,7 @@ const Alquileres = () => {
         const filtrados = alquileres.filter(
             (alquiler) =>
                 alquiler.fecha_inicio.toLowerCase().includes(texto) ||
-                alquiler.fecha_fin.toLowerCase().includes(texto) 
+                alquiler.fecha_fin.toLowerCase().includes(texto)
         );
         setAlquileresFiltrados(filtrados)
     };

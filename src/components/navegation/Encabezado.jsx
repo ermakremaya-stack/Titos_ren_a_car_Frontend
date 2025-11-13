@@ -1,36 +1,63 @@
-import React, { useState } from 'react';
+// src/components/navegation/Encabezado.jsx
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Nav, Navbar, Offcanvas } from "react-bootstrap";
-
 
 const Encabezado = () => {
   const [mostrarMenu, setMostrarMenu] = useState(false);
   const navigate = useNavigate();
 
-  //Alternar visibilidad del menu
-  const manejarToggle = () => setMostrarMenu(!mostrarMenu);
+  const usuario = JSON.parse(localStorage.getItem("usuarioTito")) || {};
+  const rol = usuario.rol || "Invitado";
 
-  //Navegar y cerrar menu
+  const manejarToggle = () => setMostrarMenu(!mostrarMenu);
   const manejarNavegacion = (ruta) => {
     navigate(ruta);
     setMostrarMenu(false);
   };
 
+  // MENÚS POR ROL (SEGÚN PERMISOS DE BD)
+  const menus = {
+    Usuario: [
+      { label: "Inicio", ruta: "/bienvenido", icon: "bi-house-fill" },
+      { label: "Alquiler", ruta: "/alquiler", icon: "bi-car-front" },
+    ],
+    Administrador: [
+      { label: "Inicio", ruta: "/bienvenido", icon: "bi-house-fill" },
+      { label: "Coches", ruta: "/coches", icon: "bi-car-front" },
+      { label: "Empleados", ruta: "/empleados", icon: "bi-people-fill" },
+      { label: "Usuarios", ruta: "/usuarios", icon: "bi-person-circle" },
+      { label: "Alquiler", ruta: "/alquiler", icon: "bi-calendar-check" },
+      { label: "Mantenimiento", ruta: "/mantenimiento", icon: "bi-tools" },
+      { label: "Capacitación", ruta: "/capacitacion", icon: "bi-building-fill-gear" },
+    ],
+    "Agente de alquiler": [
+      { label: "Inicio", ruta: "/bienvenido", icon: "bi-house-fill" },
+      { label: "Alquiler", ruta: "/alquiler", icon: "bi-car-front" },
+    ],
+    Mecánico: [
+      { label: "Inicio", ruta: "/bienvenido", icon: "bi-house-fill" },
+      { label: "Mantenimiento", ruta: "/mantenimiento", icon: "bi-tools" },
+    ],
+  };
+
+  const menuActual = menus[rol] || menus.Usuario;
+
   return (
-    <Navbar expand="md" fixed="top" style={{ backgroundColor: "brown"}}>
+    <Navbar expand="md" fixed="top" style={{ backgroundColor: "brown" }}>
       <Container>
         <Navbar.Brand
-          onClick={() => manejarNavegacion("/inicio")}
+          onClick={() => manejarNavegacion("/bienvenido")}
           className="text-white fw-bold"
-          style={{ cursor: "pointe" }}
+          style={{ cursor: "pointer" }}
         >
-          Tito's rent a car
+          Tito's Rent a Car
         </Navbar.Brand>
 
         <Navbar.Toggle
           aria-controls="menu-offcanvas"
           onClick={manejarToggle}
-          style={{ backgroundColor : "whitesmoke" }}
+          style={{ backgroundColor: "whitesmoke" }}
         />
 
         <Navbar.Offcanvas
@@ -40,60 +67,23 @@ const Encabezado = () => {
           onHide={() => setMostrarMenu(false)}
         >
           <Offcanvas.Header closeButton>
-            <Offcanvas.Title>Menú principal</Offcanvas.Title>
+            <Offcanvas.Title>
+              {usuario.nombre ? `${usuario.nombre} (${rol})` : "Menú"}
+            </Offcanvas.Title>
           </Offcanvas.Header>
-
 
           <Offcanvas.Body>
             <Nav className="flex-grow-1 pe-3">
-              <Nav.Link
-                className={mostrarMenu ? "texto-marca" : "text-white"}
-                onClick={() => manejarNavegacion("/inicio")}
-              >
-                {mostrarMenu ? <i className="bi bi-house-fill"></i> : null} Inicio
-              </Nav.Link>
-
-              <Nav.Link
-                className={mostrarMenu ? "texto-marca" : "text-white"}
-                onClick={() => manejarNavegacion("/coches")}
-              >
-                {mostrarMenu ? <i className='bi bi-car-front'></i> : null} Coches
-              </Nav.Link>
-
-              <Nav.Link
-                className={mostrarMenu ? "texto-marca" : "text-white"}
-                onClick={() => manejarNavegacion("/empleados")}
-              >
-                {mostrarMenu ? <i className="bi-house-fill me-2"></i> : null} Empleados
-              </Nav.Link>
-
-              <Nav.Link
-                className={mostrarMenu ? "texto-marca" : "text-white"}
-                onClick={() => manejarNavegacion("/usuarios")}
-              >
-                {mostrarMenu ? <i className="bi bi-person-circle"></i> : null} Usuarios
-              </Nav.Link>
-
-              <Nav.Link
-                className={mostrarMenu ? "texto-marca" : "text-white"}
-                onClick={() => manejarNavegacion("/alquiler")}
-              >
-                {mostrarMenu ? <i className="bi-house-fill me-2"></i> : null} Alquiler
-              </Nav.Link>
-
-              <Nav.Link
-                className={mostrarMenu ? "texto-marca" : "text-white"}
-                onClick={() => manejarNavegacion("/detalle_alquiler")}
-              >
-                {mostrarMenu ? <i className="bi-house-fill me-2"></i> : null} Detalle Alquiler
-              </Nav.Link>
-
-              <Nav.Link
-                className={mostrarMenu ? "texto-marca" : "text-white"}
-                onClick={() => manejarNavegacion("/capacitacion")}
-              >
-                {mostrarMenu ? <i className="bi bi-building-fill-gear"></i> : null} Capacitación
-              </Nav.Link>
+              {menuActual.map((item) => (
+                <Nav.Link
+                  key={item.ruta}
+                  onClick={() => manejarNavegacion(item.ruta)}
+                  className="text-dark"
+                >
+                  <i className={`bi ${item.icon} me-2`}></i>
+                  {item.label}
+                </Nav.Link>
+              ))}
             </Nav>
           </Offcanvas.Body>
         </Navbar.Offcanvas>

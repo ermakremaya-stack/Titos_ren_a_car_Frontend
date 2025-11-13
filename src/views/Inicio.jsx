@@ -1,74 +1,82 @@
-//Componentes necesarios para funcionamiento del formulario
-import { Container, Card, Form, Button } from "react-bootstrap"; 
-import Encabezado from "../components/navegation/Encabezado"; 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Container, Card, Form, Button } from "react-bootstrap";
+
 
 export default function Inicio() {
+  const navigate = useNavigate();
 
-const [Email, setEmail] = useState("");
-const [Contrasena, setContrasena] = useState("");
+  const [Email, setEmail] = useState("");
+  const [Contrasena, setContrasena] = useState("");
+  const [mensaje, setMensaje] = useState("");  // ← NUEVO
 
-const handleLogin = () => {
-  const url = `http://localhost:3000/api/loginUsuario/${Email}/${Contrasena}`;
-  window.location.href = url; // ← Redirige con GET
-};
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    if (!Email || !Contrasena) {
+      setMensaje("Faltan correo o contraseña");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:3000/api/loginusuario", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ Email, Contrasena })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        localStorage.setItem("usuarioTito", JSON.stringify(data.usuario));
+        navigate("/bienvenido");
+      } else {
+        setMensaje(data.message || "Error al iniciar sesión");
+      }
+    } catch (error) {
+      setMensaje("Error de conexión");
+    }
+  };
 
   return (
     <>
-      <Encabezado />
-      {/*Centra espacios debajo de navbar para temas de ubicacion*/}
       <Container className="mt-5 pt-5">
-        {/* Se sentra el contenido dentro de esta etiqueta*/}
         <div className="row justify-content-center">
-          {/*Definimoso reglas para que cuando el tamaño de la pantalla cambie sea mas dinamica y sean mas pequeños*/}
           <div className="col-md-6 col-lg-4">
-            {/*Formato de diceño más elegante con borde y sombras*/}
             <Card className="shadow-lg border-0">
               <Card.Body className="p-5">
                 <h2 className="text-center mb-4 fw-bold" style={{ color: "#8B4513" }}>
                   Tito's Rent a Car
                 </h2>
-                <p className="text-center text-muted mb-4">
-                  Inicia sesión para continuar
-                </p>
 
-                <Form>
-                  <Form.Group className="mb-3" controlId="email">
-                    <Form.Label>Correo electrónico</Form.Label>
+                {/* MENSAJE DE ERROR */}
+                {mensaje && <div className="alert alert-danger">{mensaje}</div>}
+
+                <Form onSubmit={handleLogin}>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Correo</Form.Label>
                     <Form.Control
                       type="email"
                       value={Email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Ingresa tu correo electrónico"
+                      placeholder="juan.perez@email.com"
                     />
                   </Form.Group>
 
-                  <Form.Group className="mb-4" controlId="password">
+                  <Form.Group className="mb-4">
                     <Form.Label>Contraseña</Form.Label>
                     <Form.Control
                       type="password"
                       value={Contrasena}
                       onChange={(e) => setContrasena(e.target.value)}
-                      placeholder="Ingresa tu contraseña"
+                      placeholder="juan123"
                     />
                   </Form.Group>
 
-                  <Button 
-                    onClick={handleLogin}
-                    variant="primary" 
-                    className="w-100" 
-                    style={{ backgroundColor: "#8B4513", border: "none" }}
-                  >
+                  <Button type="submit" className="w-100" style={{ backgroundColor: "#8B4513", border: "none" }}>
                     Iniciar Sesión
                   </Button>
                 </Form>
-
-                {/*Creamos boton para recuperación de contraseñas en caso de olvido*/}
-                <div className="text-center mt-3">
-                  <small className="text-muted">
-                    ¿Olvidaste tu contraseña? <a href="#">Recupérala aquí</a>
-                  </small>
-                </div>
               </Card.Body>
             </Card>
           </div>
