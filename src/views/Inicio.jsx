@@ -1,9 +1,18 @@
 //Componentes necesarios para funcionamiento del formulario
 import { Container, Card, Form, Button } from "react-bootstrap"; 
 import Encabezado from "../components/navegation/Encabezado"; 
-
+import { useState } from "react";
 
 export default function Inicio() {
+
+const [Email, setEmail] = useState("");
+const [Contrasena, setContrasena] = useState("");
+
+const handleLogin = () => {
+  const url = `http://localhost:3000/api/loginUsuario/${Email}/${Contrasena}`;
+  window.location.href = url; // ← Redirige con GET
+};
+
   return (
     <>
       <Encabezado />
@@ -28,7 +37,9 @@ export default function Inicio() {
                     <Form.Label>Correo electrónico</Form.Label>
                     <Form.Control
                       type="email"
-                      placeholder="tuemail@ejemplo.com"
+                      value={Email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Ingresa tu correo electrónico"
                     />
                   </Form.Group>
 
@@ -36,11 +47,14 @@ export default function Inicio() {
                     <Form.Label>Contraseña</Form.Label>
                     <Form.Control
                       type="password"
-                      placeholder="••••••••"
+                      value={Contrasena}
+                      onChange={(e) => setContrasena(e.target.value)}
+                      placeholder="Ingresa tu contraseña"
                     />
                   </Form.Group>
 
                   <Button 
+                    onClick={handleLogin}
                     variant="primary" 
                     className="w-100" 
                     style={{ backgroundColor: "#8B4513", border: "none" }}
