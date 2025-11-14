@@ -11,19 +11,25 @@ export default function Inicio() {
   const [mensaje, setMensaje] = useState("");
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
   const [mostrarRecuperar, setMostrarRecuperar] = useState(false);
+  const [tipoUsuario, setTipoUsuario] = useState("cliente");
 
-  const handleLogin = async (e) => {
+const handleLogin = async (e) => {
     e.preventDefault();
     setMensaje("");
     setMostrarRecuperar(false);
 
     if (!Email || !Contrasena) {
-      setMensaje("Faltan datos");
+      setMensaje("Faltan correo o contraseña");
       return;
     }
 
+    // ENDPOINT SEGÚN TIPO
+    const endpoint = tipoUsuario === "cliente"
+      ? "http://localhost:3000/api/loginusuario"
+      : "http://localhost:3000/api/loginempleado";
+
     try {
-      const res = await fetch("http://localhost:3000/api/loginusuario", {
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ Email, Contrasena })
@@ -36,7 +42,6 @@ export default function Inicio() {
         navigate("/bienvenido");
       } else {
         setMensaje(data.message || "Error al iniciar sesión");
-        // MOSTRAR BOTÓN SI ES CONTRASEÑA INCORRECTA
         if (data.message?.includes("contraseña") || data.message?.includes("incorrect")) {
           setMostrarRecuperar(true);
         }
@@ -102,7 +107,7 @@ export default function Inicio() {
                     type="email"
                     value={Email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="juan.perez@email.com"
+                    placeholder="Tú correo"
                   />
                 </Form.Group>
 
@@ -113,6 +118,7 @@ export default function Inicio() {
                       type={mostrarContrasena ? "text" : "password"}
                       value={Contrasena}
                       onChange={(e) => setContrasena(e.target.value)}
+                      placeholder="Tú contraseña"
                     />
                     <InputGroup.Text
                       onClick={() => setMostrarContrasena(!mostrarContrasena)}
@@ -121,6 +127,14 @@ export default function Inicio() {
                       {mostrarContrasena ? <EyeSlash /> : <Eye />}
                     </InputGroup.Text>
                   </InputGroup>
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Tipo de usuario</Form.Label>
+                  <Form.Select value={tipoUsuario} onChange={(e) => setTipoUsuario(e.target.value)}>
+                    <option value="cliente">Cliente</option>
+                    <option value="empleado">Empleado</option>
+                  </Form.Select>
                 </Form.Group>
 
                 <Button type="submit" className="w-100" style={{ backgroundColor: "#8B4513", border: "none" }}>
