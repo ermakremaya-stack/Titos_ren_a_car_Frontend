@@ -1,13 +1,15 @@
 // src/views/Inicio.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Card, Form, Button, Alert } from "react-bootstrap";
+import { Container, Card, Form, Button, Alert, InputGroup } from "react-bootstrap";
+import { Eye, EyeSlash } from "react-bootstrap-icons";
 
 export default function Inicio() {
   const navigate = useNavigate();
   const [Email, setEmail] = useState("");
   const [Contrasena, setContrasena] = useState("");
   const [mensaje, setMensaje] = useState("");
+  const [mostrarContrasena, setMostrarContrasena] = useState(false);
   const [mostrarRecuperar, setMostrarRecuperar] = useState(false);
 
   const handleLogin = async (e) => {
@@ -106,12 +108,19 @@ export default function Inicio() {
 
                 <Form.Group className="mb-4">
                   <Form.Label>Contraseña</Form.Label>
-                  <Form.Control
-                    type="password"
-                    value={Contrasena}
-                    onChange={(e) => setContrasena(e.target.value)}
-                    placeholder="••••••••"
-                  />
+                  <InputGroup>
+                    <Form.Control
+                      type={mostrarContrasena ? "text" : "password"}
+                      value={Contrasena}
+                      onChange={(e) => setContrasena(e.target.value)}
+                    />
+                    <InputGroup.Text
+                      onClick={() => setMostrarContrasena(!mostrarContrasena)}
+                      style={{ cursor: "pointer", background: "transparent", borderLeft: "none" }}
+                    >
+                      {mostrarContrasena ? <EyeSlash /> : <Eye />}
+                    </InputGroup.Text>
+                  </InputGroup>
                 </Form.Group>
 
                 <Button type="submit" className="w-100" style={{ backgroundColor: "#8B4513", border: "none" }}>
