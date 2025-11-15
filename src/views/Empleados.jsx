@@ -19,9 +19,6 @@ const Empleados = () => {
   const [paginaActual, establecerPaginaActual] = useState(1);
   const elementosPorPagina = 5;
 
-  // Fecha actual en formato YYYY-MM-DD (para input type="date")
-  const hoy = new Date().toISOString().split('T')[0];
-
   const [nuevoEmpleado, setNuevoEmpleado] = useState({
     Rol: "",
     Cedula: "",
@@ -32,7 +29,6 @@ const Empleados = () => {
     Direccion: "",
     Email: "",
     Contrasena: "",
-    fecha_contratacion: hoy
   });
 
   const empleadosPaginados = empleadosFiltrados.slice(
@@ -46,16 +42,27 @@ const Empleados = () => {
   };
 
   const agregarEmpleado = async () => {
-   if (!nuevoEmpleado.Nombre1?.trim() || !nuevoEmpleado.Apellido1?.trim()) return;
+  if (!nuevoEmpleado.Nombre1?.trim() || !nuevoEmpleado.Apellido1?.trim()) return;
+    //Creamos variable que extraiga el valor del rol y lo asigne
+    const rolSeleccionado = nuevoEmpleado.Rol;
+
+    // 2. VALIDAR QUE EL ROL ESTÉ SELECCIONADO
+  if (rolSeleccionado === '') {
+    alert("Por favor selecciona un rol");
+    return;
+  }
+
     try {
       const respuesta = await fetch('http://localhost:3000/api/registrarEmpleado', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(nuevoEmpleado)
       });
+
+
       if (!respuesta.ok) throw new Error('Error al guardar');
       setNuevoEmpleado({
-        Rol: "",
+        Rol: rolSeleccionado,
         Cedula: "",
         Nombre1: "",
         Nombre2: "",
@@ -64,7 +71,6 @@ const Empleados = () => {
         Direccion: "",
         Email: "",
         Contrasena: "",
-        fecha_contratacion: hoy
       });
       setMostrarModal(false);
       await obtenerEmpleados();
@@ -88,7 +94,7 @@ const Empleados = () => {
     }
   };
 
- const manejarCambioBusqueda = (e) => {
+  const manejarCambioBusqueda = (e) => {
   const texto = e.target.value.toLowerCase();
   setTextoBusqueda(texto);
 
@@ -116,6 +122,16 @@ const Empleados = () => {
 
   const guardarEdicion = async () => {
     try {
+
+    //Creamos variable que extraiga el valor del rol y lo asigne
+    const rolSeleccionado = empleadoEditado.Rol;
+
+    // 2. VALIDAR QUE EL ROL ESTÉ SELECCIONADO
+    if (rolSeleccionado === '') {
+    alert("Por favor selecciona un rol");
+    return;
+  }
+
       const respuesta = await fetch(`http://localhost:3000/api/empleados/${empleadoEditado.Id_Empleado}`, { // ← Cambiado
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -136,7 +152,7 @@ const Empleados = () => {
     setMostrarModalEliminar(true);
   };
 
- const confirmarEliminacion = async () => {
+  const confirmarEliminacion = async () => {
   try {
     const respuesta = await fetch(`http://localhost:3000/api/empleados/${empleadoAEliminar.Id_Empleado}`, { // ← Cambiado
       method: 'DELETE',

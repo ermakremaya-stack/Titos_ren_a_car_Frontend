@@ -1,4 +1,4 @@
-import { Modal, Form, Button } from "react-bootstrap";
+import { Modal, Form, Button, FormControl } from "react-bootstrap";
 
 const ModalRegistroEmpleado = ({
   mostrarModal,
@@ -21,15 +21,17 @@ const ModalRegistroEmpleado = ({
         <Form>
           <Form.Group className="mb-3" controlId="Rol">
             <Form.Label>Rol</Form.Label>
-            <Form.Control
-              type="text"
+            <Form.Select
               name="Rol"
               value={nuevoEmpleado.Rol}
               onChange={manejarCambioInput}
-              placeholder="Ej: Mecánico"
-              maxLength={30}
               required
-            />
+              >
+              <option value=''>Selecciona un rol</option>
+              <option value="Administrador">Administrador</option>
+              <option value="Mecánico">Mecánico</option>
+              <option value="Agente de alquiler">Agente de alquiler</option>
+            </Form.Select>
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="Cedula">
