@@ -152,13 +152,6 @@ const ModalRegistrarUsuario = ({
             />
           </Form.Group>
 
-
-          <Form.Group className="mb-3" controlId="rol">
-            <Form.Label>Rol</Form.Label>
-            <Form.Select name="Rol" value={nuevoUsuario.Rol} onChange={manejarCambioInput}>
-              <option value="Usuario">Usuario</option>
-            </Form.Select>
-          </Form.Group>
         </Form>
       </Modal.Body>
 
