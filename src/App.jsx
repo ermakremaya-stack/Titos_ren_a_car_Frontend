@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/navegation/ProtegerRutas.jsx";
 import Inicio from "./views/Inicio.jsx";
-import Bienvenido from "./views/Bienvenida.jsx";
+import Bienvenido from "./views/Bienvenido.jsx";
 import Alquileres from "./views/Alquiler.jsx";
 import Coches from "./views/Coches.jsx";
 import Usuarios from "./views/Usuarios.jsx";

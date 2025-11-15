@@ -22,7 +22,7 @@ const handleLogin = async (e) => {
       setMensaje("Faltan correo o contraseña");
       return;
     }
-
+    console.log("Login Empleado:", { Email, Contrasena, tipoUsuario });
     // ENDPOINT SEGÚN TIPO
     const endpoint = tipoUsuario === "cliente"
       ? "http://localhost:3000/api/loginusuario"

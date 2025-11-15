@@ -95,12 +95,6 @@ const TablaEmpleado = ({
               </BotonOrden>
             </th>
             <th>
-              <BotonOrden campo="Contrasena" orden={orden} manejarOrden={manejarOrden}>
-                Contraseña
-              </BotonOrden>
-            </th>
-
-            <th>
               <BotonOrden campo="Fecha_Contratacion" orden={orden} manejarOrden={manejarOrden}>
                 Fecha de Contratacion
               </BotonOrden>
@@ -121,7 +115,6 @@ const TablaEmpleado = ({
               <td>{empleado.Apellido2}</td>
               <td>{empleado.Direccion}</td>
               <td>{empleado.Email}</td>
-              <td>{empleado.Contrasena}</td>
               <td>{empleado.Fecha_Contratacion}</td>
               <td>
                 <Button

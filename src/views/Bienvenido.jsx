@@ -1,4 +1,4 @@
-// src/views/Bienvenido.jsx
+// src/views/Bienvenida.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Card, Button, Spinner, Alert, Modal } from "react-bootstrap";
@@ -12,7 +12,9 @@ export default function Bienvenido() {
   const [showModal, setShowModal] = useState(false); // Estado del modal
   const navigate = useNavigate();
 
+
   useEffect(() => {
+
     const cargarUsuario = () => {
       try {
         const usuarioGuardado = localStorage.getItem("usuarioTito");
@@ -38,6 +40,7 @@ export default function Bienvenido() {
     localStorage.removeItem("usuarioTito");
     navigate("/inicio");
   };
+  
 
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
@@ -92,14 +95,16 @@ export default function Bienvenido() {
                 </div>
 
                 <h1 className="mb-3 fw-bold" style={{ color: "#8B4513" }}>
-                  ¡Bienvenido, {usuario?.nombre}!
+                  ¡Bienvenido, {usuario?.nombre || "Usuario"}                
                 </h1>
 
                 <p className="text-muted mb-4 d-flex align-items-center justify-content-center gap-2">
                   <User size={18} />
-                  Rol: <strong className="ms-1 text-capitalize">{usuario?.rol || "Usuario"}</strong>
+                    Rol: <strong className="ms-1 text-capitalize">{usuario?.rol || "Administrador"}</strong>
                 </p>
 
+                  <pre style={{ fontSize: "0.8rem", color: "#555" }}>
+                  </pre>
                 <hr className="my-4" />
 
                 <div className="d-grid">
