@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import TablaMantenimiento from "../components/mantenimientos/TablaMantenimiento.jsx";
-import CuadroBusqueda from "../components/busquedas/CuadroBusqueda.jsx";
-import ModalRegistroMantenimiento from "../components/mantenimientos/ModalRegistrarMantenimiento.jsx";
-import ModalEdicionMantenimiento from "../components/mantenimientos/ModalEditarMantenimiento.jsx";
-import ModalEliminacionMantenimiento from "../components/mantenimientos/ModalEliminarMantenimiento.jsx";
+//import TablaMantenimiento from "../components/mantenimientos/TablaMantenimiento.jsx";
+//import CuadroBusqueda from "../components/busquedas/CuadroBusqueda.jsx";
+///import ModalRegistroMantenimiento from "../components/mantenimientos/ModalRegistrarMantenimiento.jsx";
+//import ModalEdicionMantenimiento from "../components/mantenimientos/ModalEditarMantenimiento.jsx";
+//import ModalEliminacionMantenimiento from "../components/mantenimientos/ModalEliminarMantenimiento.jsx";
 
 const Mantenimientos = () => {
 

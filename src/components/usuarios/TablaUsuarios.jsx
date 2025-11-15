@@ -54,6 +54,7 @@ const TablaUsuarios = ({
 
   return (
     <>
+    <br />
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -62,7 +63,6 @@ const TablaUsuarios = ({
                 ID
               </BotonOrden>
             </th>
-            <th>Rol</th>
             <th>Cédula</th>
             <th>
               <BotonOrden campo="Nombre1" orden={orden} manejarOrden={manejarOrden}>
@@ -88,7 +88,6 @@ const TablaUsuarios = ({
             </th>
             <th>Email</th>
             <th>Licencia</th>
-            <th>Contraseña</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -96,7 +95,6 @@ const TablaUsuarios = ({
           {usuariosOrdenados.map((usuario) => (
             <tr key={usuario.Id_Usuario}>
               <td>{usuario.Id_Usuario}</td>
-              <td>{usuario.Rol}</td>
               <td>{usuario.Cedula}</td>
               <td>{usuario.Nombre1}</td>
               <td>{usuario.Nombre2}</td>
@@ -105,9 +103,7 @@ const TablaUsuarios = ({
               <td>{usuario.Telefono}</td>
               <td>{usuario.Direccion}</td>
               <td>{usuario.Email}</td>
-              <td>{usuario.Licencia}</td>
-              <td>{usuario.Contrasena}</td>
-              <td>
+              <td>{usuario.Licencia}</td>              <td>
                 <Button
                   variant="outline-warning"
                   size="sm"
