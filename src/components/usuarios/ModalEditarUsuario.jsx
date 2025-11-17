@@ -127,23 +127,13 @@ const ModalEditarUsuario = ({
             <Form.Control
               type="password"
               name="Contrasena"
-              value={usuarioEditado.Contrasena || ""}
+            
               onChange={manejarCambioInputEditar}
               placeholder="Solo si desea cambiarla"
               maxLength={20}
             />
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="rol">
-            <Form.Label>Rol</Form.Label>
-            <Form.Select
-              name="Rol"
-              value={usuarioEditado.Rol || "Usuario"}
-              onChange={manejarCambioInputEditar}
-            >
-              <option value="Usuario">Usuario</option>
-            </Form.Select>
-          </Form.Group>
         </Form>
       </Modal.Body>
       <Modal.Footer>

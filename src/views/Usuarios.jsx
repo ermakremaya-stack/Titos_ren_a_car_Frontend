@@ -20,7 +20,7 @@ const Usuarios = () => {
 
   const [mostrarModal, setMostrarModal] = useState(false);
   const [nuevoUsuario, setNuevoUsuario] = useState({
-    Rol: "Usuario",
+  
     Cedula: "",
     Nombre1: "",
     Nombre2: "",
@@ -74,7 +74,7 @@ const Usuarios = () => {
 
       if (!respuesta.ok) throw new Error("Error al registrar el usuario");
       setNuevoUsuario({
-        Rol: "Usuario",
+     
         Cedula: "",
         Nombre1: "",
         Nombre2: "",
@@ -122,7 +122,7 @@ const Usuarios = () => {
   const guardarCambiosUsuario = async () => {
     try {
       const respuesta = await fetch(`http://localhost:3000/api/usuarios/${usuarioEditado.Id_Usuario}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(usuarioEditado),
       });
@@ -169,7 +169,7 @@ const Usuarios = () => {
     setTextoBusqueda(texto);
 
     const filtrados = usuarios.filter((usuario) =>
-      usuario.Rol.toLowerCase().includes(texto) ||
+
       usuario.Cedula.toLowerCase().includes(texto) ||
       usuario.Nombre1.toLowerCase().includes(texto) ||
       usuario.Nombre2.toLowerCase().includes(texto) ||
