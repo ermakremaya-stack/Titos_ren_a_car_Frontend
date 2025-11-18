@@ -167,7 +167,7 @@ const [detallesNuevosAlquiler, setDetalleNuevoAlquiler] = useState([]);
 
         // 2️⃣ Registrar los detalles de alquiler
         for (const d of detallesNuevosAlquiler) {
-            await fetch('http://localhost:3000/api/registrarDetalle_Alquiler', {
+            await fetch('http://localhost:3000/api/registrarDetalleAlquiler', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ...d, Id_Alquiler: id_alquiler })
