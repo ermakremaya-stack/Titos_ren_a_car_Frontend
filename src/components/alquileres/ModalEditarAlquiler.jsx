@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 
 const ModalEdicionAlquiler = ({
@@ -23,12 +22,10 @@ const ModalEdicionAlquiler = ({
                     <Form.Group className="mb-3" controlId="fecha_inicio">
                         <Form.Label>Fecha Inicio</Form.Label>
                         <Form.Control
-                            type="text"
+                            type="datetime-local"
                             name="fecha_inicio"
-                            value={alquilerEditado?.fecha_inicio}
+                            value={alquilerEditado?.fecha_inicio || ''}
                             onChange={manejarCambio}
-                            placeholder="Ej: 2024-03-01 09:00:00"
-                            maxLength={50}
                             required
                             autoFocus
                         />
@@ -36,15 +33,12 @@ const ModalEdicionAlquiler = ({
                     <Form.Group className="mb-3" controlId="fecha_fin">
                         <Form.Label>Fecha Fin</Form.Label>
                         <Form.Control
-                            type="text"
+                            type="datetime-local"
                             name="fecha_fin"
-                            value={alquilerEditado?.fecha_fin}
+                            value={alquilerEditado?.fecha_fin || ''}
                             onChange={manejarCambio}
-                            placeholder="2024-03-10 17:30:00"
-                            maxLength={50}
                         />
                     </Form.Group>
-
                 </Form>
             </Modal.Body>
             <Modal.Footer>

@@ -1,6 +1,5 @@
 import { Modal, Form, Button } from "react-bootstrap";
 
-
 const ModalRegistroAlquiler = ({
     mostrarModal,
     setMostrarModal,
@@ -11,45 +10,47 @@ const ModalRegistroAlquiler = ({
     return (
         <Modal
             backdrop="static"
-            show={mostrarModal} onHide={() => setMostrarModal(false)} centered>
+            show={mostrarModal}
+            onHide={() => setMostrarModal(false)}
+            centered
+        >
             <Modal.Header closeButton>
                 <Modal.Title>Agregar Nuevo Alquiler</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
 
+            <Modal.Body>
                 <Form>
+                    {/* FECHA DE INICIO */}
                     <Form.Group className="mb-3" controlId="fecha_inicio">
                         <Form.Label>Fecha Inicio</Form.Label>
                         <Form.Control
-                            type="text"
+                            type="datetime-local"
                             name="fecha_inicio"
                             value={nuevoAlquiler.fecha_inicio}
                             onChange={manejarCambioInput}
-                            placeholder="Ej. 2023-03-01 09:00:00',"
-                            maxLength={20}
-                            required
-                        />
-                    </Form.Group> 
-
-                    <Form.Group className="mb-3" controlId="fecha_fin">
-                        <Form.Label>Fecha Fin</Form.Label>
-                        <Form.Control
-                            type="text"
-                            name="fecha_fin"
-                            value={nuevoAlquiler.fecha_fin}
-                            onChange={manejarCambioInput}
-                            placeholder="2024-03-10 17:30:00"
-                            maxLength={20}
                             required
                         />
                     </Form.Group>
 
+                    {/* FECHA DE FIN */}
+                    <Form.Group className="mb-3" controlId="fecha_fin">
+                        <Form.Label>Fecha Fin</Form.Label>
+                        <Form.Control
+                            type="datetime-local"
+                            name="fecha_fin"
+                            value={nuevoAlquiler.fecha_fin}
+                            onChange={manejarCambioInput}
+                            required
+                        />
+                    </Form.Group>
                 </Form>
             </Modal.Body>
+
             <Modal.Footer>
                 <Button variant="secondary" onClick={() => setMostrarModal(false)}>
                     Cancelar
                 </Button>
+
                 <Button
                     variant="primary"
                     onClick={agregarAlquiler}

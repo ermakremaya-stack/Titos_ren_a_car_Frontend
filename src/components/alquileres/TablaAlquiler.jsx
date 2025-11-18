@@ -84,6 +84,11 @@ const TablaAlquiler = ({
                                 <td>{alquiler.fecha_inicio}</td>
                                 <td>{alquiler.fecha_fin}</td>
                                 <td>
+
+                                    <Button size="sm" variant="outline-info" onClick={() => obtenerDetallesAlquiler(alquiler.id_alquiler)}>
+                                    Detalles
+                                    </Button>
+
                                     <Button
                                         variant="outline-warning"
                                         size="sm"
@@ -99,6 +104,7 @@ const TablaAlquiler = ({
                                     >
                                         <i className="bi bi-trash"></i>
                                     </Button>
+
                                 </td>
                             </tr>
 
