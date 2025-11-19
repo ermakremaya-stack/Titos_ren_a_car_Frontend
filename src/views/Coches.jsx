@@ -6,6 +6,7 @@ import ModalRegistroCoche from "../components/coches/ModalRegistroCoches.jsx";
 import ModalEdicionCoche from "../components/coches/ModalEditarCoche.jsx";
 import ModalEliminacionCoche from "../components/coches/ModalEliminarCoche.jsx";
 
+
 const Coches = () => {
 
   const [paginaActual, establecerPaginaActual] = useState(1);
@@ -193,6 +194,7 @@ const cochesPaginadas = cochesFiltrados.slice(
     .replace(/[\u0300-\u036f]/g, ""); // elimina acentos
     setTextoBusqueda(texto);
 
+    
     const filtrados = coches.filter(
       (coche) =>
         coche.marca.toLowerCase().includes(texto) ||
@@ -212,6 +214,9 @@ const cochesPaginadas = cochesFiltrados.slice(
 
   return (
     <>
+      <br/>
+      <br/>
+      <br/>
       <Container className="mt-4">
         <h4>Coches</h4>
         <Row>

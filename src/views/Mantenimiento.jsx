@@ -224,6 +224,9 @@ const Mantenimiento = () => {
 
     return (
         <div className="container mt-3">
+            <br/>
+            <br/>
+            <br/>
             <h2 className="text-center">Gestión de Mantenimientos</h2>
 
             {/* Barra Superior */}

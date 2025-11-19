@@ -288,6 +288,9 @@ const obtenerNombreCoche = async (id) => {
 
     return (
         <>
+            <br/>
+            <br/>
+            <br/>
             <Container className="mt-4">
                 <h4>Alquileres</h4>
                 <Row>

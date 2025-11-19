@@ -71,6 +71,9 @@ export default function Bienvenido() {
 
   return (
     <>
+      <br/>
+      <br/>
+      <br/>
       <Encabezado />
 
       <Container className="mt-5 pt-5">

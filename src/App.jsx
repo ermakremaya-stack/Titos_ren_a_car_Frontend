@@ -7,7 +7,7 @@ import Coches from "./views/Coches.jsx";
 import Usuarios from "./views/Usuarios.jsx";
 import Empleados from "./views/Empleados.jsx";
 import Capacitacion from "./views/Capacitacion.jsx";
-import Mantenimiento from "./views/Mantenimiento.jsx"; // si existe
+import Mantenimiento from "./views/Mantenimiento.jsx"; 
 import LayoutPublico from "./components/navegation/LayoutPublico.jsx";
 import LayoutPrivado from "./components/navegation/LayoutPrivado.jsx";
 

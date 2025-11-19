@@ -15,6 +15,9 @@ const Capacitacion = () => {
   return (
     <>
       <br/>
+      <br/>
+      <br/>
+      
       <BarraOpciones onSelectPregunta={desSeleccionarPregunta} />
 
       <div style={{ padding: "20px" }}>

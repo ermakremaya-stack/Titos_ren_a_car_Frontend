@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Table, Spinner, Button } from "react-bootstrap";
 import BotonOrden from "../ordenamiento/BotonOrden";
 import Paginacion from "../ordenamiento/Paginacion";
+import "../../App.css";
 
 const TablaCoche = ({
   coches,
@@ -75,7 +76,9 @@ const TablaCoche = ({
             <th>Modelo</th>
             <th className="text-center">Año del modelo</th>
             <th>Placa</th>
-            <th className="text-center">Color</th>
+            <th className="text-center">
+              Color
+            </th>
             <th>
               <BotonOrden campo="fecha_registro" orden={orden} manejarOrden={manejarOrden}>
                 Fecha de Registro
