@@ -121,7 +121,7 @@ const Mantenimiento = () => {
         }
     };
 
-    // ELIMINAR
+    // ⭐⭐⭐ ELIMINAR (CORREGIDA: elimina directo sin duplicar)
     const eliminarMantenimiento = async () => {
         try {
             await fetch(
@@ -129,8 +129,13 @@ const Mantenimiento = () => {
                 { method: "DELETE" }
             );
 
-            obtenerMantenimientos();
+            // Quitar directamente del estado, sin recargar lista
+            setMantenimientos(prev =>
+                prev.filter(m => m.Id_Mantenimiento !== mantenimientoSeleccionado.Id_Mantenimiento)
+            );
+
             setMostrarEliminar(false);
+
         } catch (error) {
             console.error("Error al eliminar:", error);
         }
