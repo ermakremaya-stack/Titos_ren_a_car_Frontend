@@ -1,249 +1,317 @@
-import { useState, useEffect } from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
-//import TablaMantenimiento from "../components/mantenimientos/TablaMantenimiento.jsx";
-//import CuadroBusqueda from "../components/busquedas/CuadroBusqueda.jsx";
-///import ModalRegistroMantenimiento from "../components/mantenimientos/ModalRegistrarMantenimiento.jsx";
-//import ModalEdicionMantenimiento from "../components/mantenimientos/ModalEditarMantenimiento.jsx";
-//import ModalEliminacionMantenimiento from "../components/mantenimientos/ModalEliminarMantenimiento.jsx";
+import { useEffect, useState } from "react";
+import { Button } from "react-bootstrap";
+import TablaMantenimientos from "../components/mantenimientos/TablaMantenimiento";
+import ModalRegistrarMantenimiento from "../components/mantenimientos/ModalRegistrarMantenimiento";
+import ModalEliminarMantenimiento from "../components/mantenimientos/ModalEliminarMantenimiento";
+import ModalDetallesMantenimiento from "../components/Detalle_Mantenimiento/ModalDetallesMantenimiento";
 
-const Mantenimientos = () => {
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
-    const [paginaActual, establecerPaginaActual] = useState(1);
-    const elementosPorPagina = 5; 
-
+const Mantenimiento = () => {
     const [mantenimientos, setMantenimientos] = useState([]);
+    const [empleados, setEmpleados] = useState([]);
+    const [coches, setCoches] = useState([]);
     const [cargando, setCargando] = useState(true);
 
-    const [mantenimientosFiltrados, setMantenimientosFiltrados] = useState([]);
-    const [textoBusqueda, setTextoBusqueda] = useState('');
-
     const [mostrarModal, setMostrarModal] = useState(false);
+    const [mostrarEliminar, setMostrarEliminar] = useState(false);
+    const [mostrarDetalles, setMostrarDetalles] = useState(false);
+
+    const [detalles, setDetalles] = useState([]);
+    const [mantenimientoSeleccionado, setMantenimientoSeleccionado] = useState(null);
+
+    const [buscar, setBuscar] = useState("");
 
     const [nuevoMantenimiento, setNuevoMantenimiento] = useState({
-        Descripcion: '',
-        Justificacion: '',
-        Fecha_Inicio: '',
-        Fecha_Fin: '',
-        Costo:'',
+        Descripcion: "",
+        Justificacion: "",
+        Fecha_Inicio: "",
+        Fecha_Fin: "",
+        Costo: 0
     });
 
-    // Calcular coches paginados
-    const mantenimientosPaginadas = mantenimientosFiltrados.slice(
-        (paginaActual - 1) * elementosPorPagina,
-        paginaActual * elementosPorPagina
-    );
+    // PAGINACIÓN
+    const [paginaActual, establecerPaginaActual] = useState(1);
+    const elementosPorPagina = 3;
 
-
-    const [mostrarModalEdicion, setMostrarModalEdicion] = useState(false);
-    const [mostrarModalEliminar, setMostrarModalEliminar] = useState(false);
-
-    const [mantenimientoEditado, setMantenimientoEditado] = useState(null);
-    const [mantenimientoEliminar, setMantenimientoEliminar] = useState(null);
-
-    const abrirModalEdicion = (mantenimiento) => {
-        console.log("Mantenimiento recibido para editar:", { ...mantenimiento })
-        setMantenimientoEditado({ ...mantenimiento });
-        setMostrarModalEdicion(true);
-    };
-
-
-
-    const guardarEdicion = async () => {
-        console.log("🚀 Iniciando guardarEdicion con:", mantenimientoEditado);
-        if (!mantenimientoEditado.fecha_inicio.trim()) {
-            console.warn("⚠️ No hay Fecha inicio Valida:", mantenimientoEditado?.fecha_inicio);
-            return;
-        }
-        try {
-            const respuesta = await fetch(`http://localhost:3000/api/actualizarMantenimiento/${mantenimientoEditado.Id_Mantenimiento}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(mantenimientoEditado)
-            });
-            console.log("Respuesta del servidor:", respuesta);
-
-            if (!respuesta.ok) throw new Error('Error al actualizar');
-            setMostrarModalEdicion(false);
-            await obtenerMantenimientos();
-            console.log("✅ Mantenimiento actualizado correctamente");
-        } catch (error) {
-            console.error("Error al editar mantenimiento:", error);
-            alert("No se pudo actualizar el mantenimiento.");
-        }
-    };
-
-
-
-
-
-    const abrirModalEliminacion = (mantenimiento) => {
-        setMantenimientoEliminar(mantenimiento);
-        setMostrarModalEliminar(true);
-    };
-
-
-
-    const confirmarEliminacion = async () => {
-        try {
-            const respuesta = await fetch(`http://localhost:3000/api/eliminarMantenimiento/${mantenimientoEliminar.Id_Mantenimiento}`, {
-                method: 'DELETE',
-            });
-            if (!respuesta.ok) throw new Error('Error al eliminar');
-            setMostrarModalEliminar(false);
-            setMantenimientoEliminar(null);
-            await obtenerMantenimientos();
-        } catch (error) {
-            console.error("Error al eliminar un mantenimiento:", error);
-            alert("No se pudo eliminar el mantenimiento.");
-        }
-    };
-
-
-
-
-    const manejarCambioInput = (e) => {
-        const { name, value } = e.target;
-        setNuevoMantenimiento(prev => ({ ...prev, [name]: value }));
-    };
-
-    const agregarMantenimiento = async () => {
-        if (!setNuevoMantenimiento.Fecha_Inicio.trim()) return;
-
-        try {
-            const respuesta = await fetch('http://localhost:3000/api/registrarMantenimiento', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(nuevoMantenimiento) // cambio aqui por set
-            });
-
-            if (!respuesta.ok) throw new Error('Error al guardar');
-
-            
-            setNuevoMantenimiento({ fecha_inicio: '', fecha_fin: ''});
-            setMostrarModal(false);
-            await obtenerMantenimientos(); 
-        } catch (error) {
-            console.error("Error al agregar el mantenimiento:", error);
-            alert("No se pudo guardar el alquiler. Revisa la consola.");
-        }
-    };
-
-
+    // CONSULTAS
     const obtenerMantenimientos = async () => {
         try {
-            const respuesta = await fetch("http://localhost:3000/api/Mantenimientos");
-            const datos = await respuesta.json();
-            setMantenimientos(datos);
-            if (!respuesta.ok) {
-                throw new Error("Error al obtener los alquileres");
-            }
-            const mantenimientosNormalizados = datos.map(a => ({
-                Id_Mantenimiento: a.Id_Mantenimiento,
-                Descripcion: a.Descripcion,
-                Justificacion: a.Justificacion,
-                Fecha_Inicio: a.Fecha_Inicio,
-                Fecha_Fin: a.Fecha_Fin
-            }));
-
-            setMantenimientos(mantenimientosNormalizados);
-            setMantenimientosFiltrados(mantenimientosNormalizados);
-            setCargando(false);
-
-
+            const res = await fetch("http://localhost:3000/api/mantenimientos");
+            const data = await res.json();
+            setMantenimientos(data);
         } catch (error) {
-            console.error(error.message);
-            setCargando(false);
+            console.error("Error al obtener mantenimientos:", error);
+        }
+        setCargando(false);
+    };
+
+    const obtenerEmpleados = async () => {
+        try {
+            const res = await fetch("http://localhost:3000/api/empleados");
+            setEmpleados(await res.json());
+        } catch (error) {
+            console.error("Error cargando empleados:", error);
         }
     };
 
-    const [textoVisible, setTextoVisible] = useState("")
+    const obtenerCoches = async () => {
+        try {
+            const res = await fetch("http://localhost:3000/api/coches");
+            setCoches(await res.json());
+        } catch (error) {
+            console.error("Error cargando coches:", error);
+        }
+    };
 
-    setTextoVisible
-
-    const manejarCambioBusqueda = (e) => {
-        
-        const original = e.target.value;
-        setTextoVisible(original);
-        
-        const texto = e.target.value
-            .toLowerCase()
-            .normalize("NFD") // separa acentos de letras
-            .replace(/[\u0300-\u036f]/g, ""); // elimina acentos
-        setTextoBusqueda(texto);
-
-        const filtrados = mantenimientos.filter(
-            (mantenimiento) =>
-                mantenimiento.fecha_inicio.toLowerCase().includes(texto) ||
-                mantenimiento.fecha_fin.toLowerCase().includes(texto) 
-        );
-        setAlquileresFiltrados(filtrados)
+    const obtenerDetalles = async (id) => {
+        try {
+            const res = await fetch(`http://localhost:3000/api/detalles-mantenimiento/${id}`);
+            const data = await res.json();
+            setDetalles(data);
+            setMostrarDetalles(true);
+        } catch (error) {
+            console.error("Error al obtener detalles:", error);
+        }
     };
 
     useEffect(() => {
         obtenerMantenimientos();
+        obtenerEmpleados();
+        obtenerCoches();
     }, []);
 
+    // FILTRO
+    const mantenimientosFiltrados = mantenimientos.filter((m) =>
+        m.Descripcion.toLowerCase().includes(buscar.toLowerCase()) ||
+        m.Justificacion.toLowerCase().includes(buscar.toLowerCase()) ||
+        String(m.Id_Mantenimiento).includes(buscar)
+    );
+
+    // PAGINACIÓN
+    const indexUltimo = paginaActual * elementosPorPagina;
+    const indexPrimero = indexUltimo - elementosPorPagina;
+    const mantenimientosPaginados = mantenimientosFiltrados.slice(indexPrimero, indexUltimo);
+    const totalPaginas = Math.ceil(mantenimientosFiltrados.length / elementosPorPagina);
+
+    const cambiarPagina = (num) => establecerPaginaActual(num);
+
+    // GUARDAR
+    const guardarMantenimiento = async () => {
+        try {
+            const body = { ...nuevoMantenimiento, detalles };
+
+            const res = await fetch("http://localhost:3000/api/mantenimientos", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            });
+
+            if (!res.ok) throw new Error("Error al guardar");
+
+            obtenerMantenimientos();
+            setMostrarModal(false);
+            setDetalles([]);
+
+        } catch (error) {
+            console.error("Error al guardar mantenimiento:", error);
+        }
+    };
+
+    // ELIMINAR
+    const eliminarMantenimiento = async () => {
+        try {
+            await fetch(
+                `http://localhost:3000/api/mantenimientos/${mantenimientoSeleccionado.Id_Mantenimiento}`,
+                { method: "DELETE" }
+            );
+
+            obtenerMantenimientos();
+            setMostrarEliminar(false);
+        } catch (error) {
+            console.error("Error al eliminar:", error);
+        }
+    };
+
+    // MODALES
+    const abrirModalEdicion = (m) => {
+        setMantenimientoSeleccionado(m);
+        setNuevoMantenimiento({
+            Descripcion: m.Descripcion,
+            Justificacion: m.Justificacion,
+            Fecha_Inicio: m.Fecha_Inicio,
+            Fecha_Fin: m.Fecha_Fin,
+            Costo: m.Costo
+        });
+        setMostrarModal(true);
+    };
+
+    const abrirModalNuevo = () => {
+        setMantenimientoSeleccionado(null);
+        setNuevoMantenimiento({
+            Descripcion: "",
+            Justificacion: "",
+            Fecha_Inicio: "",
+            Fecha_Fin: "",
+            Costo: 0
+        });
+        setDetalles([]);
+        setMostrarModal(true);
+    };
+
+    const abrirModalEliminar = (m) => {
+        setMantenimientoSeleccionado(m);
+        setMostrarEliminar(true);
+    };
+
+    // EXPORTAR PDF
+    const exportarPDF = () => {
+        const doc = new jsPDF();
+
+        doc.text("Reporte de Mantenimientos", 14, 10);
+
+        const columnas = [
+            "ID",
+            "Descripción",
+            "Justificación",
+            "Fecha Inicio",
+            "Fecha Fin",
+            "Costo"
+        ];
+
+        const filas = mantenimientos.map(m => [
+            m.Id_Mantenimiento,
+            m.Descripcion,
+            m.Justificacion,
+            m.Fecha_Inicio,
+            m.Fecha_Fin,
+            m.Costo
+        ]);
+
+        autoTable(doc, {
+            head: [columnas],
+            body: filas,
+            startY: 20,
+        });
+
+        doc.save("mantenimientos.pdf");
+    };
+
+    // EXPORTAR EXCEL
+    const exportarExcel = () => {
+        const worksheet = XLSX.utils.json_to_sheet(mantenimientos);
+        const workbook = XLSX.utils.book_new();
+
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Mantenimientos");
+
+        const excelBuffer = XLSX.write(workbook, {
+            bookType: "xlsx",
+            type: "array"
+        });
+
+        const file = new Blob([excelBuffer], { type: "application/octet-stream" });
+
+        saveAs(file, "mantenimientos.xlsx");
+    };
+
     return (
-        <>
-            <Container className="mt-4">
-                <h4>Mantenimientos</h4>
-                <Row>
-                    <Col lg={5} md={8} sm={8} xs={7}>
-                        <CuadroBusqueda
-                            textoBusqueda={textoBusqueda}
-                            manejarCambioBusqueda={manejarCambioBusqueda}
-                        />
-                    </Col>
+        <div className="container mt-3">
+            <h2 className="text-center">Gestión de Mantenimientos</h2>
 
-                    <Col className="text-end">
-                        <Button
-                            className="color-boton"
-                            onClick={() => setMostrarModal(true)}
-                        >
-                            + Nuevo Alquiler
-                        </Button>
-                    </Col>
-                </Row>
+            {/* Barra Superior */}
+            <div className="d-flex justify-content-between align-items-center mb-3">
 
-                <br />
-
-                <TablaAlquiler
-                    alquileres={mantenimientosPaginadas}
-                    cargando={cargando}
-                    abrirModalEdicion={abrirModalEdicion}
-                    abrirModalEliminacion={abrirModalEliminacion}
-                    totalElementos={alquileres.length}
-                    elementosPorPagina={elementosPorPagina}
-                    paginaActual={paginaActual}
-                    establecerPaginaActual={establecerPaginaActual}
+                {/* Buscador */}
+                <input
+                    type="text"
+                    placeholder="Buscar..."
+                    className="form-control w-25"
+                    value={buscar}
+                    onChange={(e) => {
+                        setBuscar(e.target.value);
+                        establecerPaginaActual(1);
+                    }}
                 />
 
-                <ModalRegistroMantenimiento
-                    mostrarModal={mostrarModal}
-                    setMostrarModal={setMostrarModal}
-                    nuevoMantenimiento={nuevoMantenimiento}
-                    manejarCambioInput={manejarCambioInput}
-                    agregarMantenimiento={agregarMantenimiento}
-                />
+                {/* Botones */}
+                <div>
+                    <Button variant="danger" size="sm" className="me-2" onClick={exportarPDF}>
+                        PDF
+                    </Button>
 
-                <ModalEdicionMantenimiento
-                    mostrar={mostrarModalEdicion}
-                    setMostrar={setMostrarModalEdicion}
-                    alquilerEditado={mantenimientoEditado}
-                    setMantenimientoEditado={setEditado}
-                    guardarEdicion={guardarEdicion}
-                />
+                    <Button variant="success" size="sm" className="me-2" onClick={exportarExcel}>
+                        Excel
+                    </Button>
 
-                <ModalEliminacionMantenimiento
-                    mostrar={mostrarModalEliminar}
-                    setMostrar={setMostrarModalEliminar}
-                    mantenimiento={mantenimientoEliminar}
-                    confirmarEliminacion={confirmarEliminacion}
-                />
-            </Container>
-        </>
+                    <Button size="sm" className="btn btn-primary" onClick={abrirModalNuevo}>
+                        Agregar
+                    </Button>
+                </div>
+            </div>
 
+            {/* Tabla */}
+            <TablaMantenimientos
+                mantenimientos={mantenimientosPaginados}
+                cargando={cargando}
+                abrirModalEdicion={abrirModalEdicion}
+                abrirModalEliminacion={abrirModalEliminar}
+                obtenerDetalles={obtenerDetalles}
+            />
+
+            {/* Paginación */}
+            {totalPaginas > 1 && (
+                <div className="d-flex justify-content-center mt-3">
+                    <nav>
+                        <ul className="pagination">
+                            {[...Array(totalPaginas)].map((_, i) => (
+                                <li
+                                    key={i}
+                                    className={`page-item ${paginaActual === i + 1 ? "active" : ""}`}
+                                >
+                                    <button
+                                        className="page-link"
+                                        onClick={() => cambiarPagina(i + 1)}
+                                    >
+                                        {i + 1}
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </nav>
+                </div>
+            )}
+
+            {/* Modales */}
+            <ModalRegistrarMantenimiento
+                mostrar={mostrarModal}
+                setMostrar={setMostrarModal}
+                nuevoMantenimiento={nuevoMantenimiento}
+                setNuevoMantenimiento={setNuevoMantenimiento}
+                detalles={detalles}
+                setDetalles={setDetalles}
+                empleados={empleados}
+                coches={coches}
+                agregarMantenimiento={guardarMantenimiento}
+            />
+
+            <ModalEliminarMantenimiento
+                mostrar={mostrarEliminar}
+                setMostrar={setMostrarEliminar}
+                mantenimiento={mantenimientoSeleccionado}
+                confirmar={eliminarMantenimiento}
+            />
+
+            <ModalDetallesMantenimiento
+                mostrar={mostrarDetalles}
+                setMostrar={setMostrarDetalles}
+                detalles={detalles}
+                mantenimiento={mantenimientoSeleccionado}
+            />
+        </div>
     );
 };
 
-export default Mantenimientos;
+export default Mantenimiento;

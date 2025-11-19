@@ -6,20 +6,36 @@ import ModalRegistroEmpleado from "../components/empleados/ModelRegistrarEmplead
 import ModalEdicionEmpleado from '../components/empleados/ModalEdicionEmpleado';
 import ModalEliminacionEmpleado from '../components/empleados/ModalEliminacionEmpleado';
 
+// LIBRERÍAS PARA EXPORTAR
+import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
 const Empleados = () => {
   const [empleados, setEmpleados] = useState([]);
-  const [cargando, setCargando] = useState(true);
   const [empleadosFiltrados, setEmpleadosFiltrados] = useState([]);
-  const [textoBusqueda, setTextoBusqueda] = useState("");
+  const [cargando, setCargando] = useState(true);
+  const [buscar, setBuscar] = useState("");
+
   const [mostrarModal, setMostrarModal] = useState(false);
   const [mostrarModalEdicion, setMostrarModalEdicion] = useState(false);
   const [mostrarModalEliminar, setMostrarModalEliminar] = useState(false);
+
   const [empleadoEditado, setEmpleadoEditado] = useState(null);
   const [empleadoAEliminar, setEmpleadoAEliminar] = useState(null);
+
+  // PAGINACIÓN
   const [paginaActual, establecerPaginaActual] = useState(1);
   const elementosPorPagina = 5;
 
-  const [nuevoEmpleado, setNuevoEmpleado] = useState({
+  const empleadosPaginados = empleadosFiltrados.slice(
+    (paginaActual - 1) * elementosPorPagina,
+    paginaActual * elementosPorPagina
+  );
+
+  const totalPaginas = Math.ceil(empleadosFiltrados.length / elementosPorPagina);
+
+  const nuevoEmpleadoBase = {
     Rol: "",
     Cedula: "",
     Nombre1: "",
@@ -29,144 +45,126 @@ const Empleados = () => {
     Direccion: "",
     Email: "",
     Contrasena: "",
-  });
-
-  const empleadosPaginados = empleadosFiltrados.slice(
-    (paginaActual - 1) * elementosPorPagina,
-    paginaActual * elementosPorPagina
-  );
-
-  const manejarCambioInput = (e) => {
-    const { name, value } = e.target;
-    setNuevoEmpleado((prev) => ({ ...prev, [name]: value }));
   };
 
-  const agregarEmpleado = async () => {
-  if (!nuevoEmpleado.Nombre1?.trim() || !nuevoEmpleado.Apellido1?.trim()) return;
-    //Creamos variable que extraiga el valor del rol y lo asigne
-    const rolSeleccionado = nuevoEmpleado.Rol;
+  const [nuevoEmpleado, setNuevoEmpleado] = useState(nuevoEmpleadoBase);
 
-    // 2. VALIDAR QUE EL ROL ESTÉ SELECCIONADO
-  if (rolSeleccionado === '') {
-    alert("Por favor selecciona un rol");
-    return;
-  }
+  // =================== EXPORTAR PDF ====================
+  const exportarPDF = () => {
+    const doc = new jsPDF();
+    doc.text("Reporte de Empleados", 14, 10);
 
-  
+    const columnas = ["ID", "Rol", "Nombre", "Email", "Dirección"];
+    const filas = empleados.map(e => [
+      e.Id_Empleado,
+      e.Rol,
+      `${e.Nombre1} ${e.Nombre2} ${e.Apellido1} ${e.Apellido2}`,
+      e.Email,
+      e.Direccion,
+    ]);
 
-    try {
-      const respuesta = await fetch('http://localhost:3000/api/registrarEmpleado', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(nuevoEmpleado)
-      });
-
-
-      if (!respuesta.ok) throw new Error('Error al guardar');
-      setNuevoEmpleado({
-        Rol: rolSeleccionado,
-        Cedula: "",
-        Nombre1: "",
-        Nombre2: "",
-        Apellido1: "",
-        Apellido2: "",
-        Direccion: "",
-        Email: "",
-        Contrasena: "",
-      });
-      setMostrarModal(false);
-      await obtenerEmpleados();
-    } catch (error) {
-      console.error("Error al agregar empleado:", error);
-      alert("No se pudo guardar el empleado. Revisa la consola.");
-    }
+    autoTable(doc, { head: [columnas], body: filas, startY: 20 });
+    doc.save("empleados.pdf");
   };
 
+  // =================== EXPORTAR EXCEL ====================
+  const exportarExcel = () => {
+    const datos = empleados.map(e => ({
+      ID: e.Id_Empleado,
+      Rol: e.Rol,
+      Nombre: `${e.Nombre1} ${e.Nombre2} ${e.Apellido1} ${e.Apellido2}`,
+      Email: e.Email,
+      Dirección: e.Direccion
+    }));
+
+    const hoja = XLSX.utils.json_to_sheet(datos);
+    const libro = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(libro, hoja, "Empleados");
+
+    XLSX.writeFile(libro, "Empleados.xlsx");
+  };
+
+  // =================== CRUD ====================
   const obtenerEmpleados = async () => {
     try {
-      const respuesta = await fetch('http://localhost:3000/api/empleados'); // ← Cambiado
-      if (!respuesta.ok) throw new Error('Error al obtener empleados');
-      const datos = await respuesta.json();
-      setEmpleados(datos);
-      setEmpleadosFiltrados(datos);
-      setCargando(false);
+      const res = await fetch("http://localhost:3000/api/empleados");
+      const data = await res.json();
+      setEmpleados(data);
+      setEmpleadosFiltrados(data);
     } catch (error) {
-      console.error(error.message);
-      setCargando(false);
+      console.error("Error cargando empleados:", error);
     }
+    setCargando(false);
   };
 
   const manejarCambioBusqueda = (e) => {
-  const texto = e.target.value.toLowerCase();
-  setTextoBusqueda(texto);
+    const texto = e.target.value.toLowerCase();
+    setBuscar(texto);
+    establecerPaginaActual(1);
 
-  const filtrados = empleados.filter(emp => {
-    // Construir cadena de nombres/apellidos de forma segura
-    const nombreCompleto = [
-      emp.Nombre1 || "",
-      emp.Nombre2 || "",
-      emp.Apellido1 || "",
-      emp.Apellido2 || ""
-    ].join(" ").trim().toLowerCase();
+    const filtrados = empleados.filter(emp => {
+      const nombreCompleto = `${emp.Nombre1} ${emp.Nombre2} ${emp.Apellido1} ${emp.Apellido2}`.toLowerCase();
+      return (
+        nombreCompleto.includes(texto) ||
+        emp.Rol.toLowerCase().includes(texto) ||
+        emp.Email.toLowerCase().includes(texto)
+      );
+    });
 
-    const rol = (emp.Rol || "").toLowerCase();
+    setEmpleadosFiltrados(filtrados);
+  };
 
-    return nombreCompleto.includes(texto) || rol.includes(texto);
-  });
+  const agregarEmpleado = async () => {
+    try {
+      const res = await fetch(
+        "http://localhost:3000/api/registrarEmpleado",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(nuevoEmpleado),
+        }
+      );
 
-  setEmpleadosFiltrados(filtrados);
-};
+      if (!res.ok) throw new Error("Error al registrar");
 
-  const abrirModalEdicion = (empleado) => {
-    setEmpleadoEditado({ ...empleado }); // ← Carga fecha tal como está en BD
-    setMostrarModalEdicion(true);
+      await obtenerEmpleados();
+      setNuevoEmpleado(nuevoEmpleadoBase);
+      setMostrarModal(false);
+
+    } catch (error) {
+      console.error("Error al agregar:", error);
+    }
   };
 
   const guardarEdicion = async () => {
     try {
+      await fetch(
+        `http://localhost:3000/api/empleados/${empleadoEditado.Id_Empleado}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(empleadoEditado),
+        }
+      );
 
-    //Creamos variable que extraiga el valor del rol y lo asigne
-    const rolSeleccionado = empleadoEditado.Rol;
-
-    // 2. VALIDAR QUE EL ROL ESTÉ SELECCIONADO
-    if (rolSeleccionado === '') {
-    alert("Por favor selecciona un rol");
-    return;
-  }
-
-      const respuesta = await fetch(`http://localhost:3000/api/empleados/${empleadoEditado.Id_Empleado}`, { // ← Cambiado
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(empleadoEditado)
-      });
-
-      if (!respuesta.ok) throw new Error('Error al actualizar');
-      setMostrarModalEdicion(false);
       await obtenerEmpleados();
+      setMostrarModalEdicion(false);
     } catch (error) {
-      console.error("Error al editar empleado:", error);
-      alert("No se pudo actualizar el empleado.");
+      console.error("Error editando:", error);
     }
   };
 
-  const abrirModalEliminacion = (empleado) => {
-    setEmpleadoAEliminar(empleado);
-    setMostrarModalEliminar(true);
-  };
-
   const confirmarEliminacion = async () => {
-  try {
-    const respuesta = await fetch(`http://localhost:3000/api/empleados/${empleadoAEliminar.Id_Empleado}`, { // ← Cambiado
-      method: 'DELETE',
-    });
+    try {
+      await fetch(
+        `http://localhost:3000/api/empleados/${empleadoAEliminar.Id_Empleado}`,
+        { method: "DELETE" }
+      );
 
-      if (!respuesta.ok) throw new Error('Error al eliminar');
-      setMostrarModalEliminar(false);
-      setEmpleadoAEliminar(null);
       await obtenerEmpleados();
+      setMostrarModalEliminar(false);
     } catch (error) {
-      console.error("Error al eliminar empleado:", error);
-      alert("No se pudo eliminar el empleado. Puede estar en uso.");
+      console.error("Error eliminando:", error);
     }
   };
 
@@ -175,63 +173,85 @@ const Empleados = () => {
   }, []);
 
   return (
-    <>
-      <Container className="mt-4">
-        <h4>Empleados</h4>
-        <Row>
-          <Col lg={5} md={6} sm={8} xs={12}>
-            <CuadroBusquedas
-              textoBusqueda={textoBusqueda}
-              manejarCambioBusqueda={manejarCambioBusqueda}
-            />
-          </Col>
-          <Col className="text-end">
-            <Button
-              className='color-boton-registro'
-              onClick={() => setMostrarModal(true)}
-            >
-              + Nuevo Empleado
-            </Button>
-          </Col>
+    <Container className="mt-4">
+      <h4>Empleados</h4>
 
+      {/* BARRA SUPERIOR */}
+      <Row className="align-items-center mb-3">
+        <Col lg={4}>
+          <input
+            type="text"
+            value={buscar}
+            placeholder="Buscar..."
+            className="form-control"
+            onChange={manejarCambioBusqueda}
+          />
+        </Col>
 
-        </Row>
-        <br />
-        <TablaEmpleados
-          empleados={empleadosPaginados}
-          cargando={cargando}
-          abrirModalEdicion={abrirModalEdicion}
-          abrirModalEliminacion={abrirModalEliminacion}
-          totalElementos={empleados.length}
-          elementosPorPagina={elementosPorPagina}
-          paginaActual={paginaActual}
-          establecerPaginaActual={establecerPaginaActual}
-        />
+        <Col className="text-end">
+          <Button className="me-2 color-boton-registro" size="sm" onClick={() => setMostrarModal(true)}>
+            + Nuevo Empleado
+          </Button>
 
-        <ModalRegistroEmpleado
-          mostrarModal={mostrarModal}
-          setMostrarModal={setMostrarModal}
-          nuevoEmpleado={nuevoEmpleado}
-          manejarCambioInput={manejarCambioInput}
-          agregarEmpleado={agregarEmpleado}
-        />
+          <Button size="sm" className="me-2" variant="success" onClick={exportarExcel}>
+            Excel
+          </Button>
 
-        <ModalEdicionEmpleado
-          mostrar={mostrarModalEdicion}
-          setMostrar={setMostrarModalEdicion}
-          empleadoEditado={empleadoEditado}
-          setEmpleadoEditado={setEmpleadoEditado}
-          guardarEdicion={guardarEdicion}
-        />
+          <Button size="sm" variant="danger" onClick={exportarPDF}>
+            PDF
+          </Button>
+        </Col>
+      </Row>
 
-        <ModalEliminacionEmpleado
-          mostrar={mostrarModalEliminar}
-          setMostrar={setMostrarModalEliminar}
-          empleado={empleadoAEliminar}
-          confirmarEliminacion={confirmarEliminacion}
-        />
-      </Container>
-    </>
+      {/* TABLA */}
+      <TablaEmpleados
+        empleados={empleadosPaginados}
+        cargando={cargando}
+        abrirModalEdicion={(e) => { setEmpleadoEditado(e); setMostrarModalEdicion(true); }}
+        abrirModalEliminacion={(e) => { setEmpleadoAEliminar(e); setMostrarModalEliminar(true); }}
+      />
+
+      {/* PAGINACIÓN */}
+      {totalPaginas > 1 && (
+        <div className="d-flex justify-content-center mt-3">
+          <ul className="pagination">
+            {[...Array(totalPaginas)].map((_, i) => (
+              <li key={i} className={`page-item ${paginaActual === i + 1 ? "active" : ""}`}>
+                <button className="page-link" onClick={() => establecerPaginaActual(i + 1)}>
+                  {i + 1}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* MODALES */}
+      <ModalRegistroEmpleado
+        mostrarModal={mostrarModal}
+        setMostrarModal={setMostrarModal}
+        nuevoEmpleado={nuevoEmpleado}
+        manejarCambioInput={(e) =>
+          setNuevoEmpleado({ ...nuevoEmpleado, [e.target.name]: e.target.value })
+        }
+        agregarEmpleado={agregarEmpleado}
+      />
+
+      <ModalEdicionEmpleado
+        mostrar={mostrarModalEdicion}
+        setMostrar={setMostrarModalEdicion}
+        empleadoEditado={empleadoEditado}
+        setEmpleadoEditado={setEmpleadoEditado}
+        guardarEdicion={guardarEdicion}
+      />
+
+      <ModalEliminacionEmpleado
+        mostrar={mostrarModalEliminar}
+        setMostrar={setMostrarModalEliminar}
+        empleado={empleadoAEliminar}
+        confirmarEliminacion={confirmarEliminacion}
+      />
+    </Container>
   );
 };
 
